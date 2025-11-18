@@ -3,9 +3,10 @@ import { useEffect } from "react";
 
 export const ScrollController = () => {
   const generatedStory = useArtworkStore((state) => state.generatedStory);
+  const hasStarted = useArtworkStore((state) => state.hasStarted);
 
   useEffect(() => {
-    if (!generatedStory) {
+    if (!generatedStory && !hasStarted) {
       // Disable scrolling
       document.body.style.position = "fixed";
       document.body.style.width = "100%";
@@ -20,7 +21,7 @@ export const ScrollController = () => {
       document.body.style.width = "";
       document.body.style.height = "";
     };
-  }, [generatedStory]);
+  }, [generatedStory, hasStarted]);
 
   return null;
 };

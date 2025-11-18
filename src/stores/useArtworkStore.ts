@@ -9,6 +9,7 @@ interface ArtworkState {
   isAnimating: boolean;
   hasCompletedCameraTransitionToArtwork: boolean;
   generatedStory: string | null;
+  hasStarted: boolean;
   setCameraTransitioning: (
     hasCompletedCameraTransitionToArtwork: boolean
   ) => void;
@@ -20,6 +21,7 @@ interface ArtworkState {
   clearActiveArtwork: () => void;
   setIsAnimating: (isAnimating: boolean) => void;
   setGeneratedStory: (story: string | null) => void;
+  setHasStarted: (hasStarted: boolean) => void;
 }
 
 export const useArtworkStore = create<ArtworkState>((set) => ({
@@ -29,6 +31,7 @@ export const useArtworkStore = create<ArtworkState>((set) => ({
   isAnimating: false,
   hasCompletedCameraTransitionToArtwork: false,
   generatedStory: null,
+  hasStarted: false,
   setCameraTransitioning: (hasCompletedCameraTransitionToArtwork) =>
     set({
       hasCompletedCameraTransitionToArtwork:
@@ -51,6 +54,7 @@ export const useArtworkStore = create<ArtworkState>((set) => ({
     }),
   setIsAnimating: (isAnimating) => set({ isAnimating }),
   setGeneratedStory: (story) => set({ generatedStory: story }),
+  setHasStarted: (hasStarted) => set({ hasStarted }),
 }));
 
 export const useShouldShowUI = () => {

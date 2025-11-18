@@ -8,3 +8,5 @@ export { ScrollController } from "./ScrollController";
 export { StorySection } from "./StorySection";
 export { StoryParagraph } from "./StoryParagraph";
 export { TimelineSection } from "./TimelineSection";
+export { HeroSection } from "./HeroSection";
+export { AmsterdamHistorySection } from "./AmsterdamHistorySection";

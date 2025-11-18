@@ -10,11 +10,14 @@ export const TimelineSection = () => {
   if (!searchQuery) return null;
   const { relatedArtworks } = useRelatedArtworks(searchQuery);
 
-  console.log(relatedArtworks);
-
   const [barsCount, setBarsCount] = useState(0);
   const OFFSET_COUNT = 5;
   const sectionRef = useRef<HTMLDivElement>(null);
+
+  const TIMELINE_SETTINGS = {
+    barWidth: 2.5,
+    gap: 5,
+  };
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -38,12 +41,12 @@ export const TimelineSection = () => {
 
   useEffect(() => {
     const calculateBarsCount = () => {
-      const barWidth = 5;
-      const gap = 5;
-
       const totalWidth = window.innerWidth;
 
-      const count = Math.floor((totalWidth - gap) / (barWidth + gap));
+      const count = Math.floor(
+        (totalWidth - TIMELINE_SETTINGS.gap) /
+          (TIMELINE_SETTINGS.barWidth + TIMELINE_SETTINGS.gap)
+      );
 
       setBarsCount(count);
     };
@@ -59,13 +62,47 @@ export const TimelineSection = () => {
       style={{
         height: "400vh",
         background: "white",
-        // justifyContent: "center",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
+      {/* Related Artworks */}
+      {relatedArtworks.length > 0 && (
+        <div
+          style={{
+            display: "flex",
+            gap: "10px",
+            alignItems: "center",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            maxWidth: "90vw",
+          }}
+        >
+          {relatedArtworks.map((artwork) => (
+            <img
+              key={artwork.id}
+              src={
+                artwork.asset[0]?.thumb?.small ||
+                artwork.asset[0]?.thumb?.medium
+              }
+              alt={artwork.title}
+              style={{
+                width: "80px",
+                height: "80px",
+                objectFit: "cover",
+                borderRadius: "4px",
+              }}
+            />
+          ))}
+        </div>
+      )}
+
       <div
         style={{
           display: "flex",
-          gap: "5px",
+          gap: TIMELINE_SETTINGS.gap,
           position: "sticky",
           top: 0,
           height: "100vh",
@@ -76,7 +113,7 @@ export const TimelineSection = () => {
         {Array.from({ length: barsCount + OFFSET_COUNT }).map((_, index) => {
           // Every 5th item (index 4, 9, 14, 19, etc.) should be taller
           const isEveryFifth = (index + 1) % 5 === 0;
-          const height = isEveryFifth ? "40px" : "20px";
+          // const height = isEveryFifth ? "40px" : "20px";
           //   const translateY = isEveryFifth ? "-10px" : "0px";
 
           return (
@@ -84,8 +121,8 @@ export const TimelineSection = () => {
               key={index}
               style={{
                 backgroundColor: "#000",
-                width: "5px",
-                height: height,
+                width: TIMELINE_SETTINGS.barWidth,
+                height: "20px",
                 borderRadius: "10px",
                 // transform: `translateY(${translateY})`,
               }}

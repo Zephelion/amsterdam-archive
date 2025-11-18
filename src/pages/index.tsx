@@ -11,12 +11,15 @@ import {
   ScrollCTA,
   StorySection,
   TimelineSection,
+  HeroSection,
+  AmsterdamHistorySection,
 } from "@/components/features";
 import { Canvas } from "@react-three/fiber";
 import { getYearFromMetaData } from "@/utils/getYearFromMetaData";
 import { useArtworkStore, useShouldShowUI } from "@/stores";
 import { useGeneratedStory } from "@/hooks";
 import * as THREE from "three";
+import { amsterdamHistoryContent } from "@/constants/amsterdamHistoryContent";
 // import styles from "@/styles/Home.module.css";
 
 interface PageProps {
@@ -36,6 +39,7 @@ const Page: NextPage<PageProps> = ({ archiveData }) => {
   const activeArtwork = useArtworkStore((state) => state.activeArtwork);
   const shouldShowUI = useShouldShowUI();
   const { generatedStory } = useGeneratedStory(activeArtwork as ArchiveItem);
+  const hasStarted = useArtworkStore((state) => state.hasStarted);
 
   // Grid configuration
   const GRID_SIZE = 10;
@@ -62,7 +66,11 @@ const Page: NextPage<PageProps> = ({ archiveData }) => {
 
   return (
     <>
-      <div style={{ width: "100vw", height: "100vh" }}>
+      {!hasStarted && <HeroSection />}
+      {hasStarted && (
+        <AmsterdamHistorySection content={amsterdamHistoryContent} />
+      )}
+      {/* <div style={{ width: "100vw", height: "100vh" }}>
         <HoverTooltip />
         <ArtworkTitle />
         <ScrollCTA />
@@ -98,7 +106,7 @@ const Page: NextPage<PageProps> = ({ archiveData }) => {
           <StorySection content={generatedStory} />
           <TimelineSection />
         </>
-      )}
+      )} */}
     </>
   );
 };

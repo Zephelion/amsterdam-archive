@@ -43,7 +43,7 @@ export const useRelatedArtworks = (searchQuery: string | null) => {
         return yearA - yearB;
       });
 
-      setRelatedArtworks(sortedData.slice(0, 10));
+      setRelatedArtworks(sortedData);
     };
 
     fetchRelatedArtworks();

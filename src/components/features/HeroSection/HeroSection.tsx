@@ -11,16 +11,6 @@ export const HeroSection = () => {
   const hasStarted = useArtworkStore((state) => state.hasStarted);
   const setHasStarted = useArtworkStore((state) => state.setHasStarted);
 
-  //   const opacity = useSpring(1, { stiffness: 50, damping: 25 });
-  //   const y = useSpring(0, { stiffness: 50, damping: 25 });
-
-  //   useEffect(() => {
-  //     if (hasStarted) {
-  //       opacity.set(0);
-  //       y.set(-20);
-  //     }
-  //   }, [hasStarted, opacity, y]);
-
   const handleStart = () => {
     setHasStarted(true);
   };
@@ -34,8 +24,25 @@ export const HeroSection = () => {
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
+        flexDirection: "column",
+        gap: "2rem",
       }}
     >
+      <h1
+        style={{
+          textAlign: "center",
+          fontFamily: cormorantGaramond.style.fontFamily,
+          fontWeight: "200",
+        }}
+      >
+        <span style={{ fontSize: "1rem", fontWeight: "200" }}>
+          Data visualization of Amsterdam's history
+        </span>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <span>Uncover the layers</span>
+          <span>Curated stories of Amsterdam's history</span>
+        </div>
+      </h1>
       <MotionButton
         style={{
           backgroundColor: "white",

@@ -66,12 +66,12 @@ const Page: NextPage<PageProps> = ({ archiveData }) => {
 
   return (
     <>
-      {!hasStarted && <HeroSection />}
-      {hasStarted && (
-        <AmsterdamHistorySection content={amsterdamHistoryContent} />
-      )}
-      {/* <div style={{ width: "100vw", height: "100vh" }}>
-        <HoverTooltip />
+      <div style={{ width: "100vw", height: "100vh" }}>
+        {!hasStarted && <HeroSection />}
+        {hasStarted && (
+          <AmsterdamHistorySection content={amsterdamHistoryContent} />
+        )}
+        {/* <HoverTooltip />
         <ArtworkTitle />
         <ScrollCTA />
         <Canvas
@@ -98,10 +98,10 @@ const Page: NextPage<PageProps> = ({ archiveData }) => {
 
           <ambientLight intensity={0.1} />
           <directionalLight position={[0, 0, 5]} color="red" />
-        </Canvas>
+        </Canvas> */}
       </div>
 
-      {shouldShowUI && activeArtwork && generatedStory && (
+      {/* {shouldShowUI && activeArtwork && generatedStory && (
         <>
           <StorySection content={generatedStory} />
           <TimelineSection />

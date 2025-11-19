@@ -5,3 +5,4 @@ export * from "./useArtworkScale";
 export * from "./useCameraTransition";
 export * from "./useGeneratedStory";
 export * from "./useRelatedArtworks";
+export * from "./useScrollDirection";

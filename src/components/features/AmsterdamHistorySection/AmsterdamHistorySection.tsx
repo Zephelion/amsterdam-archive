@@ -3,6 +3,7 @@ import { StoryParagraph } from "@/components/features";
 import { useRef } from "react";
 import { useScroll } from "framer-motion";
 import { HistoryParagraph } from "@/constants/amsterdamHistoryContent";
+import { YearDisplay } from "@/components/features";
 
 const cormorantGaramond = Cormorant_Garamond({
   variable: "--font-cormorant-garamond",
@@ -36,9 +37,8 @@ export const AmsterdamHistorySection = ({
         content={content}
         scrollYProgress={scrollYProgress}
         fadeTransitionPercentage={0.4}
-        // paragraphLength={200}
-        // startVisible={true}
       />
+      <YearDisplay content={content} scrollYProgress={scrollYProgress} />
     </section>
   );
 };

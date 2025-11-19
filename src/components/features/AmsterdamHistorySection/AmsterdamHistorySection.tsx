@@ -2,6 +2,7 @@ import { Cormorant_Garamond } from "next/font/google";
 import { StoryParagraph } from "@/components/features";
 import { useRef } from "react";
 import { useScroll } from "framer-motion";
+import { HistoryParagraph } from "@/constants/amsterdamHistoryContent";
 
 const cormorantGaramond = Cormorant_Garamond({
   variable: "--font-cormorant-garamond",
@@ -9,7 +10,7 @@ const cormorantGaramond = Cormorant_Garamond({
 });
 
 interface AmsterdamHistorySectionProps {
-  content: string[];
+  content: HistoryParagraph[];
 }
 
 export const AmsterdamHistorySection = ({
@@ -34,6 +35,7 @@ export const AmsterdamHistorySection = ({
       <StoryParagraph
         content={content}
         scrollYProgress={scrollYProgress}
+        fadeTransitionPercentage={0.4}
         // paragraphLength={200}
         // startVisible={true}
       />

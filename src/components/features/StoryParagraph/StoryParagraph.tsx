@@ -1,24 +1,27 @@
 import { breakContentIntoParagraphs } from "@/utils/breakContentIntoParagraphs";
 import { MotionValue, useTransform } from "framer-motion";
 import { MotionParagraph } from "../MotionElements";
+import { HistoryParagraph } from "@/constants/amsterdamHistoryContent";
 
 interface StoryParagraphProps {
-  content: string | string[];
+  content: string | string[] | HistoryParagraph[];
   scrollYProgress: MotionValue<number>;
   paragraphLength?: number;
+  fadeTransitionPercentage?: number;
 }
 
 export const StoryParagraph = ({
   content,
   scrollYProgress,
   paragraphLength = 150,
+  fadeTransitionPercentage = 0.1,
 }: StoryParagraphProps) => {
-  const paragraphs = Array.isArray(content)
-    ? content
+  const paragraphs: { text: string }[] = Array.isArray(content)
+    ? content.map((item) => (typeof item === "string" ? { text: item } : item))
     : breakContentIntoParagraphs({
         content,
         maxLength: paragraphLength,
-      });
+      }).map((text) => ({ text }));
 
   return (
     <div
@@ -35,6 +38,7 @@ export const StoryParagraph = ({
       {paragraphs.map((paragraph, index) => {
         const totalParagraphs = paragraphs.length;
         const isLastParagraph = index === totalParagraphs - 1;
+        const { text } = paragraph;
 
         // Calculate each paragraph's scroll segment
         const segmentStart = index / totalParagraphs;
@@ -43,8 +47,9 @@ export const StoryParagraph = ({
 
         // Fade in during first 10% of segment, fade out during last 10%
         // Use percentage of segment size, not total scroll
-        const fadeInEnd = segmentStart + segmentSize * 0.1;
-        const fadeOutStart = segmentEnd - segmentSize * 0.1;
+        const fadeInEnd = segmentStart + segmentSize * fadeTransitionPercentage;
+        const fadeOutStart =
+          segmentEnd - segmentSize * fadeTransitionPercentage;
         // For last paragraph, extend fade-out slightly to handle scroll progress beyond 1.0
         const fadeOutEnd = isLastParagraph
           ? segmentEnd + segmentSize * 0.05
@@ -87,7 +92,7 @@ export const StoryParagraph = ({
               padding: "0 20px",
             }}
           >
-            {paragraph}
+            {text}
           </MotionParagraph>
         );
       })}

@@ -1,3 +1,5 @@
+import { getCurrentYear } from "@/utils/getCurrentYear";
+
 export interface HistoryParagraph {
   text: string;
   year: number;
@@ -57,5 +59,9 @@ export const amsterdamHistoryContent: HistoryParagraph[] = [
   {
     text: "Amsterdam wordt een thuis voor talloze gemeenschappen uit de hele wereld.",
     year: 2000,
+  },
+  {
+    text: "This project is made to showcase the rich history of Amsterdam",
+    year: getCurrentYear(),
   },
 ];

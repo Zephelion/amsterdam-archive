@@ -38,7 +38,6 @@ export const AmsterdamHistorySection = ({
         scrollYProgress={scrollYProgress}
         fadeTransitionPercentage={0.4}
       />
-      <YearDisplay content={content} scrollYProgress={scrollYProgress} />
     </section>
   );
 };

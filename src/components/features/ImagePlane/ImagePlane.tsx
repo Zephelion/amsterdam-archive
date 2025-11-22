@@ -3,6 +3,7 @@ import { useArtworkInteractions, useScale, useMouseHover } from "@/hooks";
 import { ArchiveItem } from "@/types/data-types";
 import { useArtworkStore } from "@/stores";
 import { useRef } from "react";
+import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { normalizeImageDimensions } from "@/utils/normalizeImageDimonsions";
 
@@ -23,8 +24,6 @@ export const ImagePlane = ({
   height,
   artwork,
 }: ImagePlaneProps) => {
-  // Settings for interactions
-
   const HOVER_OPTIONS = {
     intensity: 1.5,
     lerpSpeed: 0.02,
@@ -38,34 +37,39 @@ export const ImagePlane = ({
 
   const texture = useTexture(textureUrl || "");
   const meshRef = useRef<THREE.Mesh>(null!);
+  const targetPositionRef = useRef<THREE.Vector3>(
+    new THREE.Vector3(...position)
+  );
+
+  // Smoothly animate to new position when it changes
+  useFrame(() => {
+    if (!meshRef.current) return;
+
+    const target = new THREE.Vector3(...position);
+    targetPositionRef.current.lerp(target, 0.05);
+    meshRef.current.position.copy(targetPositionRef.current);
+  });
 
   const { width: normalizedWidth, height: normalizedHeight } =
     normalizeImageDimensions(width, height);
 
-  //use mouse hover if there is no active artwork
   const { handlePointerEnter, handlePointerLeave } = useMouseHover(
     meshRef,
     position,
     HOVER_OPTIONS
   );
 
-  // use artwork interactions (use base position, not the hover-modified position)
   const { handleClick } = useArtworkInteractions(artwork, position);
 
-  // Get the active artwork from the store
   const activeArtwork = useArtworkStore((state) => state.activeArtwork);
-
-  // Determine if this artwork is the active one
   const isActive = activeArtwork?.id === artwork.id;
   const hasActiveArtwork = activeArtwork !== null;
 
-  //when clicked on a item set it to active and scale the other items down
   useScale(meshRef, isActive, hasActiveArtwork, SCALE_OPTIONS);
 
   return (
     <mesh
       ref={meshRef}
-      position={position}
       onClick={handleClick}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}

@@ -13,6 +13,7 @@ import {
   TimelineSection,
   HeroSection,
   AmsterdamHistorySection,
+  YearDisplay,
 } from "@/components/features";
 import { Canvas } from "@react-three/fiber";
 import { getYearFromMetaData } from "@/utils/getYearFromMetaData";
@@ -20,7 +21,9 @@ import { useArtworkStore, useShouldShowUI } from "@/stores";
 import { useGeneratedStory } from "@/hooks";
 import * as THREE from "three";
 import { amsterdamHistoryContent } from "@/constants/amsterdamHistoryContent";
-// import styles from "@/styles/Home.module.css";
+import { useRef, useState, useEffect } from "react";
+import { useScroll } from "framer-motion";
+import { CAMERA_BASE_POSITION } from "@/constants/camera";
 
 interface PageProps {
   archiveData: ArchiveItem[];
@@ -41,41 +44,92 @@ const Page: NextPage<PageProps> = ({ archiveData }) => {
   const { generatedStory } = useGeneratedStory(activeArtwork as ArchiveItem);
   const hasStarted = useArtworkStore((state) => state.hasStarted);
 
+  // Track scroll progress from AmsterdamHistorySection
+  const historySectionRef = useRef<HTMLDivElement>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  const { scrollYProgress } = useScroll({
+    target: historySectionRef,
+    offset: ["start start", "end end"],
+  });
+
+  // Subscribe to scroll progress changes
+  useEffect(() => {
+    const unsubscribe = scrollYProgress.on("change", (progress) => {
+      setScrollProgress(progress);
+    });
+    return () => unsubscribe();
+  }, [scrollYProgress]);
+
   // Grid configuration
   const GRID_SIZE = 10;
   const SPACING = 6;
+  const SPHERE_RADIUS = 15;
+
+  // Calculate sphere position for each item
+  const getSpherePosition = (
+    index: number,
+    total: number
+  ): [number, number, number] => {
+    // Use Fibonacci sphere distribution for even spacing
+    const goldenAngle = Math.PI * (3 - Math.sqrt(5)); // Golden angle in radians
+    const y = 1 - (index / (total - 1)) * 2; // y goes from 1 to -1
+    const radius = Math.sqrt(1 - y * y); // Radius at y
+    const theta = goldenAngle * index; // Angle around the y-axis
+
+    const x = Math.cos(theta) * radius;
+    const z = Math.sin(theta) * radius;
+
+    return [x * SPHERE_RADIUS, y * SPHERE_RADIUS, z * SPHERE_RADIUS];
+  };
 
   // Calculate grid position for each item
   const getGridPosition = (index: number): [number, number, number] => {
     const row = Math.floor(index / GRID_SIZE);
     const col = index % GRID_SIZE;
 
-    // Center the grid around origin (0,0,0)
     const offsetX = ((GRID_SIZE - 1) * SPACING) / 2;
     const offsetY = ((GRID_SIZE - 1) * SPACING) / 2;
 
     const isEvenInRow = col % 2 === 1;
     const yOffset = isEvenInRow ? -1.5 : 0;
 
+    return [col * SPACING - offsetX, row * SPACING - offsetY + yOffset, 0];
+  };
+
+  // Interpolate between sphere and grid based on scroll progress
+  const getInterpolatedPosition = (index: number): [number, number, number] => {
+    const spherePos = getSpherePosition(index, archiveData.length);
+    const gridPos = getGridPosition(index);
+
+    // When scrollProgress = 0: sphere, when scrollProgress = 1: grid
+    const t = scrollProgress; // Smooth transition
+
     return [
-      col * SPACING - offsetX, // x position
-      row * SPACING - offsetY + yOffset, // y position
-      0, // z position
+      THREE.MathUtils.lerp(spherePos[0], gridPos[0], t),
+      THREE.MathUtils.lerp(spherePos[1], gridPos[1], t),
+      THREE.MathUtils.lerp(spherePos[2], gridPos[2], t),
     ];
   };
 
   return (
     <>
-      <div style={{ width: "100vw", height: "100vh" }}>
-        {!hasStarted && <HeroSection />}
-        {hasStarted && (
-          <AmsterdamHistorySection content={amsterdamHistoryContent} />
-        )}
-        {/* <HoverTooltip />
+      {/* Canvas - fixed background */}
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          zIndex: 1,
+        }}
+      >
+        <HoverTooltip />
         <ArtworkTitle />
         <ScrollCTA />
         <Canvas
-          camera={{ position: [0, 0, 12.5] }}
+          camera={{ position: CAMERA_BASE_POSITION }}
           onPointerMissed={() => clearActiveArtwork()}
         >
           <FloatingCamera />
@@ -88,7 +142,7 @@ const Page: NextPage<PageProps> = ({ archiveData }) => {
             <ImagePlane
               key={item.id}
               title={item.title}
-              position={getGridPosition(index)}
+              position={getInterpolatedPosition(index)}
               textureUrl={item.asset[0].thumb.large}
               width={item.asset[0].width}
               height={item.asset[0].height}
@@ -98,9 +152,31 @@ const Page: NextPage<PageProps> = ({ archiveData }) => {
 
           <ambientLight intensity={0.1} />
           <directionalLight position={[0, 0, 5]} color="red" />
-        </Canvas> */}
+        </Canvas>
       </div>
 
+      {/* Content overlay - scrollable */}
+      <div
+        ref={historySectionRef}
+        style={{
+          position: "relative",
+          zIndex: 2,
+          pointerEvents: "auto",
+          backdropFilter: "blur(10px)",
+          backgroundColor: "rgba(255, 255, 255, 0.5)",
+        }}
+      >
+        {!hasStarted && <HeroSection />}
+        {hasStarted && (
+          <AmsterdamHistorySection content={amsterdamHistoryContent} />
+        )}
+      </div>
+      {hasStarted && (
+        <YearDisplay
+          content={amsterdamHistoryContent}
+          scrollYProgress={scrollYProgress}
+        />
+      )}
       {/* {shouldShowUI && activeArtwork && generatedStory && (
         <>
           <StorySection content={generatedStory} />

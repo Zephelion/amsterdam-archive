@@ -36,7 +36,7 @@ export const HeroSection = () => {
         }}
       >
         <span style={{ fontSize: "1rem", fontWeight: "200" }}>
-          Data visualization of Amsterdam's history
+          Data visualization of Stadsarchief Amsterdam
         </span>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <span>Uncover the layers</span>
@@ -45,7 +45,7 @@ export const HeroSection = () => {
       </h1>
       <MotionButton
         style={{
-          backgroundColor: "white",
+          backgroundColor: "transparent",
           color: "black",
           border: "0.5px solid black",
           padding: "10px 20px",

@@ -1,11 +1,12 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useArtworkStore } from "@/stores";
 import * as THREE from "three";
+import { CAMERA_BASE_POSITION } from "@/constants/camera";
 
 export const FloatingCamera = () => {
   const { camera } = useThree();
   const activeArtwork = useArtworkStore((state) => state.activeArtwork);
-  const basePosition = [0, 0, 12.5];
+  const basePosition = CAMERA_BASE_POSITION;
 
   useFrame((state) => {
     if (activeArtwork) return;

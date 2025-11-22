@@ -64,13 +64,13 @@ const Page: NextPage<PageProps> = ({ archiveData }) => {
   // Grid configuration
   const GRID_SIZE = 10;
   const SPACING = 6;
-  const SPHERE_RADIUS = 15;
+  const SPHERE_RADIUS = 20;
 
   // Calculate sphere position for each item
   const getSpherePosition = (
     index: number,
     total: number
-  ): [number, number, number] => {
+  ): THREE.Vector3Tuple => {
     // Use Fibonacci sphere distribution for even spacing
     const goldenAngle = Math.PI * (3 - Math.sqrt(5)); // Golden angle in radians
     const y = 1 - (index / (total - 1)) * 2; // y goes from 1 to -1
@@ -84,7 +84,7 @@ const Page: NextPage<PageProps> = ({ archiveData }) => {
   };
 
   // Calculate grid position for each item
-  const getGridPosition = (index: number): [number, number, number] => {
+  const getGridPosition = (index: number): THREE.Vector3Tuple => {
     const row = Math.floor(index / GRID_SIZE);
     const col = index % GRID_SIZE;
 
@@ -98,7 +98,7 @@ const Page: NextPage<PageProps> = ({ archiveData }) => {
   };
 
   // Interpolate between sphere and grid based on scroll progress
-  const getInterpolatedPosition = (index: number): [number, number, number] => {
+  const getInterpolatedPosition = (index: number): THREE.Vector3Tuple => {
     const spherePos = getSpherePosition(index, archiveData.length);
     const gridPos = getGridPosition(index);
 
@@ -177,12 +177,12 @@ const Page: NextPage<PageProps> = ({ archiveData }) => {
           scrollYProgress={scrollYProgress}
         />
       )}
-      {/* {shouldShowUI && activeArtwork && generatedStory && (
+      {shouldShowUI && activeArtwork && generatedStory && (
         <>
           <StorySection content={generatedStory} />
           <TimelineSection />
         </>
-      )} */}
+      )}
     </>
   );
 };

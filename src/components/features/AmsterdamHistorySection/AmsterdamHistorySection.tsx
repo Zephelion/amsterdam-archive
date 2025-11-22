@@ -1,9 +1,9 @@
 import { Cormorant_Garamond } from "next/font/google";
 import { StoryParagraph } from "@/components/features";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { useScroll } from "framer-motion";
 import { HistoryParagraph } from "@/constants/amsterdamHistoryContent";
-import { YearDisplay } from "@/components/features";
+import { useArtworkStore } from "@/stores/useArtworkStore";
 
 const cormorantGaramond = Cormorant_Garamond({
   variable: "--font-cormorant-garamond",
@@ -23,12 +23,33 @@ export const AmsterdamHistorySection = ({
     offset: ["start start", "end end"],
   });
 
+  const setHasCompletedHistorySection = useArtworkStore(
+    (state) => state.setHasCompletedHistorySection
+  );
+
+  const hasCompletedHistorySection = useArtworkStore(
+    (state) => state.hasCompletedHistorySection
+  );
+
+  useEffect(() => {
+    const unsubscribe = scrollYProgress.on("change", (progress) => {
+      if (progress >= 1) {
+        setHasCompletedHistorySection(true);
+      } else {
+        setHasCompletedHistorySection(false);
+      }
+    });
+    return () => unsubscribe();
+  }, [scrollYProgress, setHasCompletedHistorySection]);
+
+  console.log(hasCompletedHistorySection);
+
   return (
     <section
       ref={sectionRef}
       style={{
         position: "relative",
-        height: "3000vh",
+        height: "2500vh",
         width: "100vw",
         fontFamily: cormorantGaramond.style.fontFamily,
       }}

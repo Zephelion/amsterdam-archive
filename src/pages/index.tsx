@@ -109,7 +109,6 @@ const Page: NextPage<PageProps> = ({ archiveData }) => {
     const gridPos = getGridPosition(index);
 
     // When history section is completed, always use grid positions
-    // Otherwise, interpolate based on scroll progress
     const t = hasCompletedHistorySection ? 1 : scrollProgress;
 
     return [

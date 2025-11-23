@@ -1,15 +1,22 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useArtworkStore } from "@/stores";
 import * as THREE from "three";
-import { CAMERA_BASE_POSITION } from "@/constants/camera";
+import { CAMERA_BASE_POSITION, CAMERA_GRID_POSITION } from "@/constants/camera";
 
 export const FloatingCamera = () => {
   const { camera } = useThree();
   const activeArtwork = useArtworkStore((state) => state.activeArtwork);
-  const basePosition = CAMERA_BASE_POSITION;
+  const hasCompletedHistorySection = useArtworkStore(
+    (state) => state.hasCompletedHistorySection
+  );
 
   useFrame((state) => {
     if (activeArtwork) return;
+
+    // Determine target base position based on history section completion
+    const targetBasePosition = hasCompletedHistorySection
+      ? CAMERA_GRID_POSITION
+      : CAMERA_BASE_POSITION;
 
     const time = state.clock.elapsedTime;
 
@@ -18,9 +25,9 @@ export const FloatingCamera = () => {
 
     // Use lerp for smoother transitions instead of directly setting position
     const targetPosition = new THREE.Vector3(
-      basePosition[0] + floatX,
-      basePosition[1] + floatY,
-      basePosition[2]
+      targetBasePosition[0] + floatX,
+      targetBasePosition[1] + floatY,
+      targetBasePosition[2]
     );
 
     camera.position.lerp(targetPosition, 0.1);

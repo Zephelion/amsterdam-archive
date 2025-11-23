@@ -3,7 +3,6 @@ import { useArtworkInteractions, useScale, useMouseHover } from "@/hooks";
 import { ArchiveItem } from "@/types/data-types";
 import { useArtworkStore } from "@/stores";
 import { useRef } from "react";
-import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { normalizeImageDimensions } from "@/utils/normalizeImageDimonsions";
 
@@ -37,18 +36,6 @@ export const ImagePlane = ({
 
   const texture = useTexture(textureUrl || "");
   const meshRef = useRef<THREE.Mesh>(null!);
-  const targetPositionRef = useRef<THREE.Vector3>(
-    new THREE.Vector3(...position)
-  );
-
-  // Smoothly animate to new position when it changes
-  useFrame(() => {
-    if (!meshRef.current) return;
-
-    const target = new THREE.Vector3(...position);
-    targetPositionRef.current.lerp(target, 0.05);
-    meshRef.current.position.copy(targetPositionRef.current);
-  });
 
   const { width: normalizedWidth, height: normalizedHeight } =
     normalizeImageDimensions(width, height);

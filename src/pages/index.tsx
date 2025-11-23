@@ -23,7 +23,9 @@ import * as THREE from "three";
 import { amsterdamHistoryContent } from "@/constants/amsterdamHistoryContent";
 import { useRef, useState, useEffect } from "react";
 import { useScroll } from "framer-motion";
-import { CAMERA_BASE_POSITION } from "@/constants/camera";
+import { CAMERA_BASE_POSITION, CAMERA_GRID_POSITION } from "@/constants/camera";
+import { AnimatePresence } from "framer-motion";
+import { MotionDiv } from "@/components/features/MotionElements";
 
 interface PageProps {
   archiveData: ArchiveItem[];
@@ -106,8 +108,9 @@ const Page: NextPage<PageProps> = ({ archiveData }) => {
     const spherePos = getSpherePosition(index, archiveData.length);
     const gridPos = getGridPosition(index);
 
-    // When scrollProgress = 0: sphere, when scrollProgress = 1: grid
-    const t = scrollProgress; // Smooth transition
+    // When history section is completed, always use grid positions
+    // Otherwise, interpolate based on scroll progress
+    const t = hasCompletedHistorySection ? 1 : scrollProgress;
 
     return [
       THREE.MathUtils.lerp(spherePos[0], gridPos[0], t),
@@ -133,7 +136,11 @@ const Page: NextPage<PageProps> = ({ archiveData }) => {
         <ArtworkTitle />
         <ScrollCTA />
         <Canvas
-          camera={{ position: CAMERA_BASE_POSITION }}
+          camera={{
+            position: hasCompletedHistorySection
+              ? CAMERA_GRID_POSITION
+              : CAMERA_BASE_POSITION,
+          }}
           onPointerMissed={() => clearActiveArtwork()}
         >
           <FloatingCamera />
@@ -160,22 +167,29 @@ const Page: NextPage<PageProps> = ({ archiveData }) => {
       </div>
 
       {/* Content overlay - scrollable */}
-      <div
-        ref={historySectionRef}
-        style={{
-          position: "relative",
-          zIndex: 2,
-          pointerEvents: "auto",
-          backdropFilter: "blur(10px)",
-          backgroundColor: "rgba(255, 255, 255, 0.5)",
-        }}
-      >
-        {!hasStarted && <HeroSection />}
-        {hasStarted && (
-          <AmsterdamHistorySection content={amsterdamHistoryContent} />
+      <AnimatePresence>
+        {!hasCompletedHistorySection && (
+          <MotionDiv
+            ref={historySectionRef}
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            style={{
+              position: "relative",
+              zIndex: 2,
+              pointerEvents: "auto",
+              backdropFilter: "blur(10px)",
+              backgroundColor: "rgba(255, 255, 255, 0.5)",
+            }}
+          >
+            {!hasStarted && <HeroSection />}
+            {hasStarted && (
+              <AmsterdamHistorySection content={amsterdamHistoryContent} />
+            )}
+          </MotionDiv>
         )}
-      </div>
-      {hasStarted && (
+      </AnimatePresence>
+      {hasStarted && !hasCompletedHistorySection && (
         <YearDisplay
           content={amsterdamHistoryContent}
           scrollYProgress={scrollYProgress}

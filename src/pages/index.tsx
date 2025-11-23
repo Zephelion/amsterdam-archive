@@ -36,6 +36,7 @@ const CAMERA_OPTIONS = {
 };
 
 const Page: NextPage<PageProps> = ({ archiveData }) => {
+  // Store state
   const clearActiveArtwork = useArtworkStore(
     (state) => state.clearActiveArtwork
   );
@@ -43,6 +44,9 @@ const Page: NextPage<PageProps> = ({ archiveData }) => {
   const shouldShowUI = useShouldShowUI();
   const { generatedStory } = useGeneratedStory(activeArtwork as ArchiveItem);
   const hasStarted = useArtworkStore((state) => state.hasStarted);
+  const hasCompletedHistorySection = useArtworkStore(
+    (state) => state.hasCompletedHistorySection
+  );
 
   // Track scroll progress from AmsterdamHistorySection
   const historySectionRef = useRef<HTMLDivElement>(null);

@@ -74,7 +74,7 @@ export const YearDisplay = ({ content, scrollYProgress }: YearDisplayProps) => {
         fontWeight: 200,
         color: "black",
         fontFamily: cormorantGaramond.style.fontFamily,
-        zIndex: 1000,
+        zIndex: 10,
         opacity,
         pointerEvents: "none",
         overflow: "hidden",

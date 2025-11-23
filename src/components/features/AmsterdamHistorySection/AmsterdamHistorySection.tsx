@@ -27,10 +27,6 @@ export const AmsterdamHistorySection = ({
     (state) => state.setHasCompletedHistorySection
   );
 
-  const hasCompletedHistorySection = useArtworkStore(
-    (state) => state.hasCompletedHistorySection
-  );
-
   useEffect(() => {
     const unsubscribe = scrollYProgress.on("change", (progress) => {
       if (progress >= 1) {
@@ -41,8 +37,6 @@ export const AmsterdamHistorySection = ({
     });
     return () => unsubscribe();
   }, [scrollYProgress, setHasCompletedHistorySection]);
-
-  console.log(hasCompletedHistorySection);
 
   return (
     <section

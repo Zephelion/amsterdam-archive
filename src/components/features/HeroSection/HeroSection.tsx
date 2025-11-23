@@ -36,7 +36,7 @@ export const HeroSection = () => {
         }}
       >
         <span style={{ fontSize: "1rem", fontWeight: "200" }}>
-          Data visualization of Stadsarchief Amsterdam
+          Reimagining the Stadsarchief Amsterdam
         </span>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <span>Uncover the layers</span>

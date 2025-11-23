@@ -2,7 +2,6 @@ import { useArtworkStore, useShouldShowUI } from "@/stores";
 import { MotionDiv } from "../MotionElements";
 import { useSpring } from "framer-motion";
 import { useEffect } from "react";
-// import styles from "./ArtworkTitle.module.css";
 
 export const ArtworkTitle = () => {
   const activeArtwork = useArtworkStore((state) => state.activeArtwork);
@@ -26,7 +25,7 @@ export const ArtworkTitle = () => {
         zIndex: 1000,
         fontSize: "24px",
         fontWeight: "bold",
-        color: "white",
+        color: "beige",
         opacity,
         textAlign: "center",
         textTransform: "uppercase",

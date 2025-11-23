@@ -14,7 +14,7 @@ export const StoryParagraph = ({
   content,
   scrollYProgress,
   paragraphLength = 150,
-  fadeTransitionPercentage = 0.1,
+  fadeTransitionPercentage = 0.25,
 }: StoryParagraphProps) => {
   const paragraphs: { text: string }[] = Array.isArray(content)
     ? content.map((item) => (typeof item === "string" ? { text: item } : item))

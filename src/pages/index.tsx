@@ -121,15 +121,15 @@ const Page: NextPage<PageProps> = ({ archiveData }) => {
 
   return (
     <>
-      {/* Canvas - fixed background */}
+      {/* Canvas - fixed when no artwork active, scrollable when artwork is active */}
       <div
         style={{
-          position: "fixed",
+          position: activeArtwork ? "relative" : "fixed", // Change to relative when artwork active
           top: 0,
           left: 0,
           width: "100vw",
           height: "100vh",
-          zIndex: 1,
+          zIndex: activeArtwork ? 1 : 2, // Lower z-index when artwork active
         }}
       >
         <HoverTooltip />

@@ -60,8 +60,9 @@ export const ImagePlane = ({
     // In grid mode (z = 0), all items should be fully visible
     // In sphere mode, normalize Z from [-20, 20] to [0, 1]
     if (z === 0) {
-      return 1;
+      return 1; // Grid mode - fully visible
     }
+    // Sphere mode: normalize Z from [-20, 20] to [0, 1]
     // Items with higher Z (closer to camera) get higher values
     const normalized = Math.max(0, Math.min(1, (z + 20) / 40));
     return normalized;

@@ -1,5 +1,6 @@
 import { Cormorant_Garamond } from "next/font/google";
 import { useState } from "react";
+import { useArtworkStore } from "@/stores";
 
 const cormorantGaramond = Cormorant_Garamond({
   variable: "--font-cormorant-garamond",
@@ -10,6 +11,10 @@ const cormorantGaramond = Cormorant_Garamond({
 export const InteractiveTimeline = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const setTimelineTransitioning = useArtworkStore(
+    (state) => state.setTimelineTransitioning
+  );
+  const setTimelineYear = useArtworkStore((state) => state.setTimelineYear);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -26,19 +31,9 @@ export const InteractiveTimeline = () => {
   const handleClick = async () => {
     const year = 1653;
 
-    try {
-      const response = await fetch("api/fetch-by-year", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ year }),
-      });
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error(error);
-    }
+    // Start timeline transition
+    setTimelineYear(year);
+    setTimelineTransitioning(true);
   };
 
   return (

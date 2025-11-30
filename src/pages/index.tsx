@@ -31,12 +31,13 @@ import {
 } from "@/constants/camera";
 import { AnimatePresence } from "framer-motion";
 import { MotionDiv } from "@/components/features/MotionElements";
+import { useTimelineTransition } from "@/hooks/useTimelineTransition";
 
 interface PageProps {
   archiveData: ArchiveItem[];
 }
 
-const Page: NextPage<PageProps> = ({ archiveData }) => {
+const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
   // Store state
   const clearActiveArtwork = useArtworkStore(
     (state) => state.clearActiveArtwork
@@ -48,6 +49,21 @@ const Page: NextPage<PageProps> = ({ archiveData }) => {
   const hasCompletedHistorySection = useArtworkStore(
     (state) => state.hasCompletedHistorySection
   );
+
+  const isTimelineTransitioning = useArtworkStore(
+    (state) => state.isTimelineTransitioning
+  );
+  const timelineTransitionProgress = useArtworkStore(
+    (state) => state.timelineTransitionProgress
+  );
+  const timelineYear = useArtworkStore((state) => state.timelineYear);
+
+  // State for artworks (can be replaced during timeline transition)
+  const [archiveData, setArchiveData] = useState(initialArchiveData);
+
+  // Ref to track if we've already fetched for the current transition
+  const hasFetchedForTransition = useRef(false);
+  const lastTimelineYear = useRef<number | null>(null);
 
   // Track scroll progress from AmsterdamHistorySection
   const historySectionRef = useRef<HTMLDivElement>(null);
@@ -102,13 +118,70 @@ const Page: NextPage<PageProps> = ({ archiveData }) => {
     return [col * SPACING - offsetX, row * SPACING - offsetY + yOffset, 0];
   };
 
-  // Interpolate between sphere and grid based on scroll progress
+  // Fetch artworks when timeline transition starts
+  useEffect(() => {
+    // Only fetch when transition starts (isTimelineTransitioning becomes true)
+    // and we haven't fetched for this year yet
+    if (
+      isTimelineTransitioning &&
+      timelineYear &&
+      timelineYear !== lastTimelineYear.current &&
+      !hasFetchedForTransition.current
+    ) {
+      hasFetchedForTransition.current = true;
+      lastTimelineYear.current = timelineYear;
+
+      // Fetch during transition to sphere
+      const fetchArtworks = async () => {
+        try {
+          const response = await fetch("/api/fetch-by-year", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ year: timelineYear }),
+          });
+          const data = await response.json();
+
+          console.log(data);
+
+          // Filter out items without valid thumbnails and assets
+          // (API already processes the year field)
+          const filteredData = data.filter((item: ArchiveItem) => {
+            if (!item.asset || item.asset.length === 0) return false;
+            if (!item.asset[0].thumb) return false;
+            if (!item.asset[0].thumb.large) return false;
+            return true;
+          });
+
+          // Replace artworks when fetched
+          setArchiveData(filteredData);
+        } catch (error) {
+          console.error("Error fetching artworks:", error);
+        }
+      };
+
+      fetchArtworks();
+    }
+
+    // Reset fetch flag when transition ends
+    if (!isTimelineTransitioning) {
+      hasFetchedForTransition.current = false;
+    }
+  }, [isTimelineTransitioning, timelineYear]);
+
+  // Interpolate between sphere and grid based on transition progress
   const getInterpolatedPosition = (index: number): THREE.Vector3Tuple => {
     const spherePos = getSpherePosition(index, archiveData.length);
     const gridPos = getGridPosition(index);
 
-    // When history section is completed, always use grid positions
-    const t = hasCompletedHistorySection ? 1 : scrollProgress;
+    // Use timeline transition progress if transitioning, otherwise use scroll progress
+    let t: number;
+    if (isTimelineTransitioning) {
+      t = timelineTransitionProgress;
+    } else {
+      t = hasCompletedHistorySection ? 1 : scrollProgress;
+    }
 
     return [
       THREE.MathUtils.lerp(spherePos[0], gridPos[0], t),
@@ -160,6 +233,7 @@ const Page: NextPage<PageProps> = ({ archiveData }) => {
             zoomDistance={CAMERA_OPTIONS.zoomDistance}
             offset={CAMERA_OPTIONS.offset}
           />
+          <TimelineTransitionController />
           {archiveData.map((item, index) => (
             <ImagePlane
               key={item.id}
@@ -214,6 +288,12 @@ const Page: NextPage<PageProps> = ({ archiveData }) => {
       )}
     </>
   );
+};
+
+// Component to handle timeline transition in Canvas context
+const TimelineTransitionController = () => {
+  useTimelineTransition();
+  return null;
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {

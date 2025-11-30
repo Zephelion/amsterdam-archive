@@ -9,9 +9,13 @@ export const FloatingCamera = () => {
   const hasCompletedHistorySection = useArtworkStore(
     (state) => state.hasCompletedHistorySection
   );
+  const isTimelineTransitioning = useArtworkStore(
+    (state) => state.isTimelineTransitioning
+  );
 
   useFrame((state) => {
-    if (activeArtwork) return;
+    // Don't float during artwork zoom or timeline transition
+    if (activeArtwork || isTimelineTransitioning) return;
 
     // Determine target base position based on history section completion
     const targetBasePosition = hasCompletedHistorySection

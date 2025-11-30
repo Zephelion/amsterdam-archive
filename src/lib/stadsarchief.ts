@@ -4,6 +4,7 @@ import { generateRandomSeed } from "@/utils/generateRandomSeed";
 const BASE_URL = `https://webservices.memorix.nl/mediabank/media?apiKey=${process.env.NEXT_PUBLIC_STADSARCHIEF_API_KEY}`;
 
 interface ArchiveSearchOptions {
+  year?: string;
   query?: string;
   page?: number;
   rows: number;
@@ -26,6 +27,13 @@ const buildUrl = (options: ArchiveSearchOptions): string => {
     if (value !== undefined && key !== "sort") {
       params.append(key, value.toString());
     }
+  }
+
+  if (options.year !== undefined) {
+    params.append(
+      "fq[]",
+      `search_i_sk_date:[${options.year} TO ${options.year}]`
+    );
   }
 
   const randomSeed = generateRandomSeed();

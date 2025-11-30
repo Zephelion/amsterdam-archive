@@ -14,6 +14,7 @@ import {
   HeroSection,
   AmsterdamHistorySection,
   YearDisplay,
+  InteractiveTimeline,
 } from "@/components/features";
 import { Canvas } from "@react-three/fiber";
 import { getYearFromMetaData } from "@/utils/getYearFromMetaData";
@@ -129,6 +130,19 @@ const Page: NextPage<PageProps> = ({ archiveData }) => {
           zIndex: activeArtwork ? 1 : 2,
         }}
       >
+        {/* Horizontal line in the middle of the screen */}
+        <AnimatePresence>
+          {hasCompletedHistorySection && (
+            <MotionDiv
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <InteractiveTimeline />
+            </MotionDiv>
+          )}
+        </AnimatePresence>
         <HoverTooltip />
         <ArtworkTitle />
         <ScrollCTA />

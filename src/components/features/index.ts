@@ -11,3 +11,4 @@ export { TimelineSection } from "./TimelineSection";
 export { HeroSection } from "./HeroSection";
 export { AmsterdamHistorySection } from "./AmsterdamHistorySection";
 export { YearDisplay } from "./YearDisplay";
+export { InteractiveTimeline } from "./InteractiveTimeline";

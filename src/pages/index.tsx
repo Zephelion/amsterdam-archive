@@ -23,19 +23,17 @@ import * as THREE from "three";
 import { amsterdamHistoryContent } from "@/constants/amsterdamHistoryContent";
 import { useRef, useState, useEffect } from "react";
 import { useScroll } from "framer-motion";
-import { CAMERA_BASE_POSITION, CAMERA_GRID_POSITION } from "@/constants/camera";
+import {
+  CAMERA_BASE_POSITION,
+  CAMERA_GRID_POSITION,
+  CAMERA_OPTIONS,
+} from "@/constants/camera";
 import { AnimatePresence } from "framer-motion";
 import { MotionDiv } from "@/components/features/MotionElements";
 
 interface PageProps {
   archiveData: ArchiveItem[];
 }
-
-const CAMERA_OPTIONS = {
-  lerpSpeed: 0.02,
-  zoomDistance: 3.5,
-  offset: [0, 0, 0] as THREE.Vector3Tuple,
-};
 
 const Page: NextPage<PageProps> = ({ archiveData }) => {
   // Store state
@@ -44,7 +42,7 @@ const Page: NextPage<PageProps> = ({ archiveData }) => {
   );
   const activeArtwork = useArtworkStore((state) => state.activeArtwork);
   const shouldShowUI = useShouldShowUI();
-  const { generatedStory } = useGeneratedStory(activeArtwork as ArchiveItem);
+  const { generatedStory } = useGeneratedStory(activeArtwork);
   const hasStarted = useArtworkStore((state) => state.hasStarted);
   const hasCompletedHistorySection = useArtworkStore(
     (state) => state.hasCompletedHistorySection
@@ -123,12 +121,12 @@ const Page: NextPage<PageProps> = ({ archiveData }) => {
       {/* Canvas - fixed when no artwork active, scrollable when artwork is active */}
       <div
         style={{
-          position: activeArtwork ? "relative" : "fixed", // Change to relative when artwork active
+          position: activeArtwork ? "relative" : "fixed",
           top: 0,
           left: 0,
           width: "100vw",
           height: "100vh",
-          zIndex: activeArtwork ? 1 : 2, // Lower z-index when artwork active
+          zIndex: activeArtwork ? 1 : 2,
         }}
       >
         <HoverTooltip />

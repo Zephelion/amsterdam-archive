@@ -195,7 +195,7 @@ const Page: NextPage<PageProps> = ({ archiveData }) => {
       {shouldShowUI && activeArtwork && generatedStory && (
         <>
           <StorySection content={generatedStory} />
-          <TimelineSection />
+          {/* <TimelineSection /> */}
         </>
       )}
     </>

@@ -15,6 +15,7 @@ import {
   AmsterdamHistorySection,
   YearDisplay,
   InteractiveTimeline,
+  TimelineTransitionController,
 } from "@/components/features";
 import { Canvas } from "@react-three/fiber";
 import { getYearFromMetaData } from "@/utils/getYearFromMetaData";
@@ -31,7 +32,6 @@ import {
 } from "@/constants/camera";
 import { AnimatePresence } from "framer-motion";
 import { MotionDiv } from "@/components/features/MotionElements";
-import { useTimelineTransition } from "@/hooks/useTimelineTransition";
 
 interface PageProps {
   archiveData: ArchiveItem[];
@@ -143,10 +143,6 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
           });
           const data = await response.json();
 
-          console.log(data);
-
-          // Filter out items without valid thumbnails and assets
-          // (API already processes the year field)
           const filteredData = data.filter((item: ArchiveItem) => {
             if (!item.asset || item.asset.length === 0) return false;
             if (!item.asset[0].thumb) return false;
@@ -155,7 +151,9 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
           });
 
           // Replace artworks when fetched
-          setArchiveData(filteredData);
+          setTimeout(() => {
+            setArchiveData(filteredData);
+          }, 5000);
         } catch (error) {
           console.error("Error fetching artworks:", error);
         }
@@ -205,7 +203,7 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
       >
         {/* Horizontal line in the middle of the screen */}
         <AnimatePresence>
-          {hasCompletedHistorySection && (
+          {hasCompletedHistorySection && !activeArtwork && (
             <MotionDiv
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -288,12 +286,6 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
       )}
     </>
   );
-};
-
-// Component to handle timeline transition in Canvas context
-const TimelineTransitionController = () => {
-  useTimelineTransition();
-  return null;
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {

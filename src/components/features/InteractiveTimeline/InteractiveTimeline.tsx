@@ -1,6 +1,10 @@
 import { Cormorant_Garamond } from "next/font/google";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useArtworkStore } from "@/stores";
+import {
+  calculateYearFromMousePosition,
+  MIN_YEAR,
+} from "@/utils/calculateYearFromMousePosition";
 
 const cormorantGaramond = Cormorant_Garamond({
   variable: "--font-cormorant-garamond",
@@ -11,6 +15,9 @@ const cormorantGaramond = Cormorant_Garamond({
 export const InteractiveTimeline = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [year, setYear] = useState(MIN_YEAR);
+  const timelineRef = useRef<HTMLDivElement>(null);
+
   const setTimelineTransitioning = useArtworkStore(
     (state) => state.setTimelineTransitioning
   );
@@ -26,11 +33,13 @@ export const InteractiveTimeline = () => {
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     setMousePosition({ x: e.clientX, y: e.clientY });
+
+    const year = calculateYearFromMousePosition(e.clientX, timelineRef);
+
+    setYear(year);
   };
 
   const handleClick = async () => {
-    const year = 1653;
-
     // Start timeline transition
     setTimelineYear(year);
     setTimelineTransitioning(true);
@@ -39,6 +48,7 @@ export const InteractiveTimeline = () => {
   return (
     <>
       <div
+        ref={timelineRef}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         onMouseMove={handleMouseMove}
@@ -69,12 +79,11 @@ export const InteractiveTimeline = () => {
             fontFamily: cormorantGaramond.style.fontFamily,
             color: "#000",
             padding: "4px 8px",
-            backgroundColor: "rgba(255, 255, 255, 0.9)",
             borderRadius: "4px",
             whiteSpace: "nowrap",
           }}
         >
-          1653
+          {year}
         </div>
       )}
     </>

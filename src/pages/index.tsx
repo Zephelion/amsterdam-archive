@@ -32,6 +32,9 @@ import {
 } from "@/constants/camera";
 import { AnimatePresence } from "framer-motion";
 import { MotionDiv } from "@/components/features/MotionElements";
+import { MapControls } from "@react-three/drei";
+import { getGridPosition } from "@/utils/getGridPosition";
+import { getSpherePosition } from "@/utils/getSpherePosition";
 
 interface PageProps {
   archiveData: ArchiveItem[];
@@ -81,42 +84,6 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
     });
     return () => unsubscribe();
   }, [scrollYProgress]);
-
-  // Grid configuration
-  const GRID_SIZE = 10;
-  const SPACING = 6;
-  const SPHERE_RADIUS = 20;
-
-  // Calculate sphere position for each item
-  const getSpherePosition = (
-    index: number,
-    total: number
-  ): THREE.Vector3Tuple => {
-    // Use Fibonacci sphere distribution for even spacing
-    const goldenAngle = Math.PI * (3 - Math.sqrt(5)); // Golden angle in radians
-    const y = 1 - (index / (total - 1)) * 2; // y goes from 1 to -1
-    const radius = Math.sqrt(1 - y * y); // Radius at y
-    const theta = goldenAngle * index; // Angle around the y-axis
-
-    const x = Math.cos(theta) * radius;
-    const z = Math.sin(theta) * radius;
-
-    return [x * SPHERE_RADIUS, y * SPHERE_RADIUS, z * SPHERE_RADIUS];
-  };
-
-  // Calculate grid position for each item
-  const getGridPosition = (index: number): THREE.Vector3Tuple => {
-    const row = Math.floor(index / GRID_SIZE);
-    const col = index % GRID_SIZE;
-
-    const offsetX = ((GRID_SIZE - 1) * SPACING) / 2;
-    const offsetY = ((GRID_SIZE - 1) * SPACING) / 2;
-
-    const isEvenInRow = col % 2 === 1;
-    const yOffset = isEvenInRow ? -1.5 : 0;
-
-    return [col * SPACING - offsetX, row * SPACING - offsetY + yOffset, 0];
-  };
 
   // Fetch artworks when timeline transition starts
   useEffect(() => {
@@ -246,6 +213,13 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
 
           <ambientLight intensity={0.1} />
           <directionalLight position={[0, 0, 5]} color="red" />
+          {
+            hasCompletedHistorySection &&
+              !activeArtwork &&
+              !isTimelineTransitioning &&
+              null
+            // <MapControls enablePan={true} enableRotate={false} />
+          }
         </Canvas>
       </div>
 

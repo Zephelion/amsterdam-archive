@@ -43,7 +43,7 @@ export const AmsterdamHistorySection = ({
       ref={sectionRef}
       style={{
         position: "relative",
-        height: "2500vh",
+        height: "5000vh",
         width: "100vw",
         fontFamily: cormorantGaramond.style.fontFamily,
       }}

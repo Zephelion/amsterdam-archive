@@ -11,11 +11,13 @@ export const HoverTooltip = () => {
   const OFFSET = 20;
 
   const { isHovered } = useArtworkStore();
+  const isTimelineTransitioning = useArtworkStore(
+    (state) => state.isTimelineTransitioning
+  );
 
-  // Update scale based on hovered artwork
   useEffect(() => {
-    scale.set(isHovered ? 1 : 0);
-  }, [isHovered, scale]);
+    scale.set(isHovered && !isTimelineTransitioning ? 1 : 0);
+  }, [isHovered, isTimelineTransitioning, scale]);
 
   // Update cursor position on mouse move
   useEffect(() => {

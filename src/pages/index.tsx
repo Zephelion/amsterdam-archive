@@ -301,10 +301,11 @@ export const getServerSideProps: GetServerSideProps = async () => {
           title: "RE:telling of the city of Amsterdam",
           description:
             "An archive project about the city of Amsterdam. Trying to push history to a broader audience.",
-          keywords: "Amsterdam, archive, history",
+          keywords:
+            "Amsterdam archive, Amsterdam history, Stadsarchief Amsterdam, historical Amsterdam, Amsterdam heritage, Amsterdam photography, Amsterdam archives, Dutch history, Amsterdam city archive, historical documents Amsterdam, Amsterdam cultural heritage, Amsterdam visual archive, Amsterdam historical images, Amsterdam memory, Amsterdam storytelling",
           openGraph: {
             type: "website",
-            locale: "en_IE",
+            locale: "nl_NL",
             site_name: "RE:telling of the city of Amsterdam",
           },
         },

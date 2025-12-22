@@ -16,6 +16,7 @@ import {
   YearDisplay,
   InteractiveTimeline,
   TimelineTransitionController,
+  BlurredOverlay,
 } from "@/components/features";
 import { Canvas } from "@react-three/fiber";
 import { getYearFromMetaData } from "@/utils/getYearFromMetaData";
@@ -181,7 +182,7 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
             </MotionDiv>
           )}
         </AnimatePresence>
-        <HoverTooltip />
+        {hasCompletedHistorySection && <HoverTooltip />}
         <ArtworkTitle />
         <ScrollCTA />
         <Canvas
@@ -223,29 +224,27 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
         </Canvas>
       </div>
 
-      {/* Content overlay - scrollable */}
       <AnimatePresence>
-        {!hasCompletedHistorySection && (
-          <MotionDiv
-            ref={historySectionRef}
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            style={{
-              position: "relative",
-              zIndex: 2,
-              pointerEvents: "auto",
-              backdropFilter: "blur(10px)",
-              backgroundColor: "rgba(255, 255, 255, 0.5)",
-            }}
-          >
-            {!hasStarted && <HeroSection />}
-            {hasStarted && (
-              <AmsterdamHistorySection content={amsterdamHistoryContent} />
-            )}
-          </MotionDiv>
-        )}
+        {!hasCompletedHistorySection && <BlurredOverlay />}
       </AnimatePresence>
+
+      {/* Content overlay - scrollable */}
+      {!hasCompletedHistorySection && (
+        <div
+          ref={historySectionRef}
+          style={{
+            position: "relative",
+            zIndex: 4,
+            pointerEvents: "auto",
+          }}
+        >
+          {!hasStarted && <HeroSection />}
+          {hasStarted && (
+            <AmsterdamHistorySection content={amsterdamHistoryContent} />
+          )}
+        </div>
+      )}
+
       {hasStarted && !hasCompletedHistorySection && (
         <YearDisplay
           content={amsterdamHistoryContent}

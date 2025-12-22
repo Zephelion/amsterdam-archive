@@ -13,3 +13,4 @@ export { AmsterdamHistorySection } from "./AmsterdamHistorySection";
 export { YearDisplay } from "./YearDisplay";
 export { InteractiveTimeline } from "./InteractiveTimeline";
 export { TimelineTransitionController } from "./TimelineTransitionController";
+export { BlurredOverlay } from "./BlurredOverlay";

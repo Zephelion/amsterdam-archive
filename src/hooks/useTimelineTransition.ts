@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useArtworkStore } from "@/stores";
 import { useFrame } from "@react-three/fiber";
 import { useThree } from "@react-three/fiber";
@@ -12,9 +12,6 @@ export const useTimelineTransition = () => {
   const { camera } = useThree();
   const isTimelineTransitioning = useArtworkStore(
     (state) => state.isTimelineTransitioning
-  );
-  const timelineTransitionProgress = useArtworkStore(
-    (state) => state.timelineTransitionProgress
   );
   const setTimelineTransitionProgress = useArtworkStore(
     (state) => state.setTimelineTransitionProgress

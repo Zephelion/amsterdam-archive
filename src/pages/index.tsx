@@ -21,7 +21,7 @@ import {
 import { Canvas } from "@react-three/fiber";
 import { getYearFromMetaData } from "@/utils/getYearFromMetaData";
 import { useArtworkStore, useShouldShowUI } from "@/stores";
-import { useGeneratedStory } from "@/hooks";
+import { useGeneratedStory, useTimelineArtworkFetch } from "@/hooks";
 import * as THREE from "three";
 import { amsterdamHistoryContent } from "@/constants/amsterdamHistoryContent";
 import { useRef, useState, useEffect } from "react";
@@ -34,8 +34,7 @@ import {
 import { AnimatePresence } from "framer-motion";
 import { MotionDiv } from "@/components/features/MotionElements";
 import { MapControls } from "@react-three/drei";
-import { getGridPosition } from "@/utils/getGridPosition";
-import { getSpherePosition } from "@/utils/getSpherePosition";
+import { getInterpolatedPosition } from "@/utils/getInterpolatedPosition";
 
 interface PageProps {
   archiveData: ArchiveItem[];
@@ -60,14 +59,18 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
   const timelineTransitionProgress = useArtworkStore(
     (state) => state.timelineTransitionProgress
   );
-  const timelineYear = useArtworkStore((state) => state.timelineYear);
 
-  // State for artworks (can be replaced during timeline transition)
-  const [archiveData, setArchiveData] = useState(initialArchiveData);
+  const archiveData = useArtworkStore((state) => state.archiveData);
+  const setArchiveData = useArtworkStore((state) => state.setArchiveData);
 
-  // Ref to track if we've already fetched for the current transition
-  const hasFetchedForTransition = useRef(false);
-  const lastTimelineYear = useRef<number | null>(null);
+  // Initialize store with initial data on mount (only once)
+  const hasInitialized = useRef(false);
+  useEffect(() => {
+    if (!hasInitialized.current && initialArchiveData.length > 0) {
+      setArchiveData(initialArchiveData);
+      hasInitialized.current = true;
+    }
+  }, [initialArchiveData, setArchiveData]);
 
   // Track scroll progress from AmsterdamHistorySection
   const historySectionRef = useRef<HTMLDivElement>(null);
@@ -87,74 +90,7 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
   }, [scrollYProgress]);
 
   // Fetch artworks when timeline transition starts
-  useEffect(() => {
-    // Only fetch when transition starts (isTimelineTransitioning becomes true)
-    // and we haven't fetched for this year yet
-    if (
-      isTimelineTransitioning &&
-      timelineYear &&
-      timelineYear !== lastTimelineYear.current &&
-      !hasFetchedForTransition.current
-    ) {
-      hasFetchedForTransition.current = true;
-      lastTimelineYear.current = timelineYear;
-
-      // Fetch during transition to sphere
-      const fetchArtworks = async () => {
-        try {
-          const response = await fetch("/api/fetch-by-year", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ year: timelineYear }),
-          });
-          const data = await response.json();
-
-          const filteredData = data.filter((item: ArchiveItem) => {
-            if (!item.asset || item.asset.length === 0) return false;
-            if (!item.asset[0].thumb) return false;
-            if (!item.asset[0].thumb.large) return false;
-            return true;
-          });
-
-          // Replace artworks when fetched
-          setTimeout(() => {
-            setArchiveData(filteredData);
-          }, 5000);
-        } catch (error) {
-          console.error("Error fetching artworks:", error);
-        }
-      };
-
-      fetchArtworks();
-    }
-
-    // Reset fetch flag when transition ends
-    if (!isTimelineTransitioning) {
-      hasFetchedForTransition.current = false;
-    }
-  }, [isTimelineTransitioning, timelineYear]);
-
-  // Interpolate between sphere and grid based on transition progress
-  const getInterpolatedPosition = (index: number): THREE.Vector3Tuple => {
-    const spherePos = getSpherePosition(index, archiveData.length);
-    const gridPos = getGridPosition(index);
-
-    // Use timeline transition progress if transitioning, otherwise use scroll progress
-    let t: number;
-    if (isTimelineTransitioning) {
-      t = timelineTransitionProgress;
-    } else {
-      t = hasCompletedHistorySection ? 1 : scrollProgress;
-    }
-
-    return [
-      THREE.MathUtils.lerp(spherePos[0], gridPos[0], t),
-      THREE.MathUtils.lerp(spherePos[1], gridPos[1], t),
-      THREE.MathUtils.lerp(spherePos[2], gridPos[2], t),
-    ];
-  };
+  useTimelineArtworkFetch();
 
   return (
     <>
@@ -204,7 +140,11 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
             <ImagePlane
               key={item.id}
               title={item.title}
-              position={getInterpolatedPosition(index)}
+              position={getInterpolatedPosition({
+                index,
+                totalItems: archiveData.length,
+                scrollProgress,
+              })}
               textureUrl={item.asset[0].thumb.large}
               width={item.asset[0].width}
               height={item.asset[0].height}

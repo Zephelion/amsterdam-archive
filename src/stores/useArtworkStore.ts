@@ -15,9 +15,12 @@ interface ArtworkState {
   isTimelineTransitioning: boolean;
   timelineTransitionProgress: number; // 0 = sphere, 1 = grid
   timelineYear: number | null;
+  // Archive data
+  archiveData: ArchiveItem[];
   setTimelineTransitioning: (isTransitioning: boolean) => void;
   setTimelineTransitionProgress: (progress: number) => void;
   setTimelineYear: (year: number | null) => void;
+  setArchiveData: (data: ArchiveItem[]) => void;
   setCameraTransitioning: (
     hasCompletedCameraTransitionToArtwork: boolean
   ) => void;
@@ -45,11 +48,13 @@ export const useArtworkStore = create<ArtworkState>((set) => ({
   isTimelineTransitioning: false,
   timelineTransitionProgress: 1, // Start at grid (1)
   timelineYear: null,
+  archiveData: [],
   setTimelineTransitioning: (isTransitioning) =>
     set({ isTimelineTransitioning: isTransitioning }),
   setTimelineTransitionProgress: (progress) =>
     set({ timelineTransitionProgress: progress }),
   setTimelineYear: (year) => set({ timelineYear: year }),
+  setArchiveData: (data) => set({ archiveData: data }),
   setCameraTransitioning: (hasCompletedCameraTransitionToArtwork) =>
     set({
       hasCompletedCameraTransitionToArtwork:

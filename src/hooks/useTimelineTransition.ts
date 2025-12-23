@@ -7,6 +7,7 @@ import * as THREE from "three";
 
 const TRANSITION_DURATION = 2000; // 2 seconds for each phase
 const WAIT_DURATION = 2000; // 2 seconds wait between transitions
+const CAMERA_LERP_SPEED = 0.05;
 
 export const useTimelineTransition = () => {
   const { camera } = useThree();
@@ -23,13 +24,15 @@ export const useTimelineTransition = () => {
   const transitionStartTime = useRef<number | null>(null);
   const phase = useRef<"toSphere" | "waiting" | "toGrid">("toSphere");
 
+  console.log(phase.current);
+
   useFrame((state) => {
     if (!isTimelineTransitioning) {
       transitionStartTime.current = null;
       return;
     }
 
-    const currentTime = state.clock.elapsedTime * 1000; // Convert to milliseconds
+    const currentTime = state.clock.elapsedTime * 1000;
 
     if (transitionStartTime.current === null) {
       transitionStartTime.current = currentTime;
@@ -45,13 +48,17 @@ export const useTimelineTransition = () => {
 
       // Transition camera to base position
       const targetPos = new THREE.Vector3(...CAMERA_BASE_POSITION);
-      camera.position.lerp(targetPos, 0.05);
+      camera.position.lerp(targetPos, CAMERA_LERP_SPEED);
 
       if (progress >= 1) {
         phase.current = "waiting";
         transitionStartTime.current = currentTime;
       }
     } else if (phase.current === "waiting") {
+      // Keeps the camera at the base position
+      const targetPos = new THREE.Vector3(...CAMERA_BASE_POSITION);
+      camera.position.lerp(targetPos, CAMERA_LERP_SPEED);
+
       // Wait 2 seconds
       if (elapsed >= WAIT_DURATION) {
         phase.current = "toGrid";
@@ -64,7 +71,7 @@ export const useTimelineTransition = () => {
 
       // Transition camera to grid position
       const targetPos = new THREE.Vector3(...CAMERA_GRID_POSITION);
-      camera.position.lerp(targetPos, 0.05);
+      camera.position.lerp(targetPos, CAMERA_LERP_SPEED);
 
       if (progress >= 1) {
         // Transition complete

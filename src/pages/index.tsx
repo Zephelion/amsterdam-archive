@@ -143,6 +143,9 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
               position={getInterpolatedPosition({
                 index,
                 totalItems: archiveData.length,
+                isTimelineTransitioning,
+                timelineTransitionProgress,
+                hasCompletedHistorySection,
                 scrollProgress,
               })}
               textureUrl={item.asset[0].thumb.large}

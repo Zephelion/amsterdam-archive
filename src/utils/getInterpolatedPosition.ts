@@ -1,27 +1,24 @@
 import * as THREE from "three";
 import { getSpherePosition } from "./getSpherePosition";
 import { getGridPosition } from "./getGridPosition";
-import { useArtworkStore } from "@/stores";
 
 interface GetInterpolatedPositionParams {
   index: number;
   totalItems: number;
+  isTimelineTransitioning: boolean;
+  timelineTransitionProgress: number;
+  hasCompletedHistorySection: boolean;
   scrollProgress: number;
 }
 
 export const getInterpolatedPosition = ({
   index,
   totalItems,
+  isTimelineTransitioning,
+  timelineTransitionProgress,
+  hasCompletedHistorySection,
   scrollProgress,
 }: GetInterpolatedPositionParams): THREE.Vector3Tuple => {
-  // Get store values directly
-  const isTimelineTransitioning =
-    useArtworkStore.getState().isTimelineTransitioning;
-  const timelineTransitionProgress =
-    useArtworkStore.getState().timelineTransitionProgress;
-  const hasCompletedHistorySection =
-    useArtworkStore.getState().hasCompletedHistorySection;
-
   const spherePos = getSpherePosition(index, totalItems);
   const gridPos = getGridPosition(index);
 

@@ -80,14 +80,41 @@ export const ImagePlane = ({
 
   useScale(meshRef, isActive, hasActiveArtwork, SCALE_OPTIONS);
 
+  const timelineTransitionProgress = useArtworkStore(
+    (state) => state.timelineTransitionProgress
+  );
+
+  const isTimelineTransitioning = useArtworkStore(
+    (state) => state.isTimelineTransitioning
+  );
+
+  // Calculate transition-based opacity
+  const transitionOpacity = useMemo(() => {
+    if (!isTimelineTransitioning) {
+      return 1; // Fully visible when not transitioning
+    }
+
+    // During transition:
+    // - Fade out as we go to sphere (1 → 0): opacity goes 1 → 0
+    // - Stay invisible during waiting (at 0)
+    // - Fade in as we go back to grid (0 → 1): opacity goes 0 → 1
+    // Use progress directly: 0 = invisible, 1 = visible
+    return timelineTransitionProgress;
+  }, [isTimelineTransitioning, timelineTransitionProgress]);
+
+  // Combine depth opacity with transition opacity
+  const finalOpacity = useMemo(() => {
+    return depthOpacity * transitionOpacity;
+  }, [depthOpacity, transitionOpacity]);
+
   // Apply depth-based opacity and scale
   useFrame(() => {
     if (!meshRef.current || hasActiveArtwork) return;
 
     const material = meshRef.current.material as THREE.MeshBasicMaterial;
     if (material) {
-      // Use a small lerp only for smooth transitions when position changes
-      const targetOpacity = depthOpacity;
+      // Use transition opacity combined with depth opacity
+      const targetOpacity = finalOpacity;
       if (Math.abs(material.opacity - targetOpacity) > 0.01) {
         material.opacity = THREE.MathUtils.lerp(
           material.opacity,
@@ -117,7 +144,7 @@ export const ImagePlane = ({
       <meshBasicMaterial
         map={texture}
         toneMapped={false}
-        opacity={depthOpacity}
+        opacity={finalOpacity}
         transparent={true}
       />
     </mesh>

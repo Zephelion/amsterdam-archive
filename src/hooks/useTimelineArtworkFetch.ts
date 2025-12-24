@@ -45,7 +45,7 @@ export const useTimelineArtworkFetch = () => {
           // Replace artworks when fetched (update Zustand store)
           setTimeout(() => {
             setArchiveData(filteredData);
-          }, 5000);
+          }, 2000);
         } catch (error) {
           console.error("Error fetching artworks:", error);
         }

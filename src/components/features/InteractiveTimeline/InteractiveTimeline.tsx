@@ -135,8 +135,8 @@ export const InteractiveTimeline = () => {
                   backgroundColor: "#000",
                   opacity: opacity,
                   cursor: "pointer",
-                  transition: "transform 0.1s ease-out", // Smooth animation
-                  transformOrigin: "center bottom", // Scale from bottom center
+                  transition: "transform 0.1s ease-out",
+                  transformOrigin: "center bottom",
                 }}
               />
             );
@@ -151,7 +151,7 @@ export const InteractiveTimeline = () => {
             top: `${mousePosition.y - 60}px`,
             transform: "translateX(-50%)",
             pointerEvents: "none",
-            zIndex: 11,
+            zIndex: 1000,
             fontSize: "2rem",
             fontFamily: cormorantGaramond.style.fontFamily,
             color: "black",
@@ -159,6 +159,7 @@ export const InteractiveTimeline = () => {
             borderRadius: "4px",
             whiteSpace: "nowrap",
             mixBlendMode: "difference",
+            backgroundColor: "white",
           }}
         >
           {year}

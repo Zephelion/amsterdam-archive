@@ -58,12 +58,12 @@ export const InteractiveTimeline = () => {
   // Calculate dot positions - create dots for each 50 years
   const MAX_YEAR = getCurrentYear();
   const yearRange = MAX_YEAR - MIN_YEAR;
-  const dotInterval = 9; // Show a dot every 50 years
-  const numberOfDots = Math.floor(yearRange / dotInterval) + 1;
+  const barInterval = 9; // Show a dot every 50 years
+  const numberOfBars = Math.floor(yearRange / barInterval) + 1;
 
-  const dots = Array.from({ length: numberOfDots }, (_, i) => {
-    const dotYear = MIN_YEAR + i * dotInterval;
-    return dotYear;
+  const bars = Array.from({ length: numberOfBars }, (_, i) => {
+    const barYear = MIN_YEAR + i * barInterval;
+    return barYear;
   });
 
   return (
@@ -97,8 +97,8 @@ export const InteractiveTimeline = () => {
           const timelineWidth =
             timelineRef.current?.getBoundingClientRect().width || 0;
 
-          return dots.map((dotYear) => {
-            const position = ((dotYear - MIN_YEAR) / yearRange) * 100;
+          return bars.map((barYear) => {
+            const position = ((barYear - MIN_YEAR) / yearRange) * 100;
 
             // Calculate opacity based on position - fade on edges
             // Fade distance: 20% from each edge
@@ -124,7 +124,7 @@ export const InteractiveTimeline = () => {
 
             return (
               <div
-                key={dotYear}
+                key={barYear}
                 style={{
                   position: "absolute",
                   left: `${position}%`,
@@ -154,10 +154,11 @@ export const InteractiveTimeline = () => {
             zIndex: 11,
             fontSize: "2rem",
             fontFamily: cormorantGaramond.style.fontFamily,
-            color: "#000",
+            color: "black",
             padding: "4px 8px",
             borderRadius: "4px",
             whiteSpace: "nowrap",
+            mixBlendMode: "difference",
           }}
         >
           {year}

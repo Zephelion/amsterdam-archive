@@ -17,6 +17,8 @@ interface ArtworkState {
   timelineYear: number | null;
   // Archive data
   archiveData: ArchiveItem[];
+  isShowingCollection: boolean;
+  setIsShowingCollection: (isShowingCollection: boolean) => void;
   setTimelineTransitioning: (isTransitioning: boolean) => void;
   setTimelineTransitionProgress: (progress: number) => void;
   setTimelineYear: (year: number | null) => void;
@@ -49,6 +51,8 @@ export const useArtworkStore = create<ArtworkState>((set) => ({
   timelineTransitionProgress: 1, // Start at grid (1)
   timelineYear: null,
   archiveData: [],
+  isShowingCollection: false,
+  setIsShowingCollection: (isShowingCollection) => set({ isShowingCollection }),
   setTimelineTransitioning: (isTransitioning) =>
     set({ isTimelineTransitioning: isTransitioning }),
   setTimelineTransitionProgress: (progress) =>

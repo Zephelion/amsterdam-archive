@@ -17,12 +17,12 @@ import {
   InteractiveTimeline,
   TimelineTransitionController,
   BlurredOverlay,
+  BrowseByCollectionButton,
 } from "@/components/features";
 import { Canvas } from "@react-three/fiber";
 import { getYearFromMetaData } from "@/utils/getYearFromMetaData";
 import { useArtworkStore, useShouldShowUI } from "@/stores";
 import { useGeneratedStory, useTimelineArtworkFetch } from "@/hooks";
-import * as THREE from "three";
 import { amsterdamHistoryContent } from "@/constants/amsterdamHistoryContent";
 import { useRef, useState, useEffect } from "react";
 import { useScroll } from "framer-motion";
@@ -58,6 +58,9 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
   );
   const timelineTransitionProgress = useArtworkStore(
     (state) => state.timelineTransitionProgress
+  );
+  const isShowingCollection = useArtworkStore(
+    (state) => state.isShowingCollection
   );
 
   const archiveData = useArtworkStore((state) => state.archiveData);
@@ -105,20 +108,23 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
           zIndex: activeArtwork ? 1 : 2,
         }}
       >
-        {/* Horizontal line in the middle of the screen */}
         <AnimatePresence>
           {hasCompletedHistorySection && !activeArtwork && (
-            <MotionDiv
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <InteractiveTimeline />
-            </MotionDiv>
+            <>
+              <MotionDiv
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <InteractiveTimeline />
+                <BrowseByCollectionButton />
+                {/* <CollectionOverlay /> */}
+                <HoverTooltip />
+              </MotionDiv>
+            </>
           )}
         </AnimatePresence>
-        {hasCompletedHistorySection && <HoverTooltip />}
         <ArtworkTitle />
         <ScrollCTA />
         <Canvas

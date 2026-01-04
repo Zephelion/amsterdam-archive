@@ -24,8 +24,6 @@ export const useTimelineTransition = () => {
   const transitionStartTime = useRef<number | null>(null);
   const phase = useRef<"toSphere" | "waiting" | "toGrid">("toSphere");
 
-  console.log(phase.current);
-
   useFrame((state) => {
     if (!isTimelineTransitioning) {
       transitionStartTime.current = null;

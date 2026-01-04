@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { getSpherePosition } from "./getSpherePosition";
-import { getGridPosition } from "./getGridPosition";
+import { getLayoutPosition } from "./layouts";
+import type { LayoutId } from "./layouts";
 
 interface GetInterpolatedPositionParams {
   index: number;
@@ -9,6 +10,9 @@ interface GetInterpolatedPositionParams {
   timelineTransitionProgress: number;
   hasCompletedHistorySection: boolean;
   scrollProgress: number;
+  layoutFrom: LayoutId;
+  layoutTo: LayoutId;
+  layoutT: number; // 0 -> 1
 }
 
 export const getInterpolatedPosition = ({
@@ -18,9 +22,19 @@ export const getInterpolatedPosition = ({
   timelineTransitionProgress,
   hasCompletedHistorySection,
   scrollProgress,
+  layoutFrom,
+  layoutTo,
+  layoutT,
 }: GetInterpolatedPositionParams): THREE.Vector3Tuple => {
   const spherePos = getSpherePosition(index, totalItems);
-  const gridPos = getGridPosition(index);
+  const fromPos = getLayoutPosition(layoutFrom, index, totalItems);
+  const toPos = getLayoutPosition(layoutTo, index, totalItems);
+
+  const gridPos: THREE.Vector3Tuple = [
+    THREE.MathUtils.lerp(fromPos[0], toPos[0], layoutT),
+    THREE.MathUtils.lerp(fromPos[1], toPos[1], layoutT),
+    THREE.MathUtils.lerp(fromPos[2], toPos[2], layoutT),
+  ];
 
   // Use timeline transition progress if transitioning, otherwise use scroll progress
   let t: number;

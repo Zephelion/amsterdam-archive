@@ -49,7 +49,7 @@ export const InteractiveTimeline = () => {
     }
   };
 
-  const handleClick = async () => {
+  const handleClick = () => {
     // Start timeline transition
     setTimelineYear(year);
     setTimelineTransitioning(true);

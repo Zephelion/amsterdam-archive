@@ -16,8 +16,10 @@ import {
   YearDisplay,
   InteractiveTimeline,
   TimelineTransitionController,
+  LayoutTransitionController,
   BlurredOverlay,
   BrowseByCollectionButton,
+  CollectionSidePanel,
 } from "@/components/features";
 import { Canvas } from "@react-three/fiber";
 import { getYearFromMetaData } from "@/utils/getYearFromMetaData";
@@ -59,10 +61,14 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
   const timelineTransitionProgress = useArtworkStore(
     (state) => state.timelineTransitionProgress
   );
-  const isShowingCollection = useArtworkStore(
-    (state) => state.isShowingCollection
+  const layoutId = useArtworkStore((state) => state.layoutId);
+  const layoutTargetId = useArtworkStore((state) => state.layoutTargetId);
+  const isLayoutTransitioning = useArtworkStore(
+    (state) => state.isLayoutTransitioning
   );
-
+  const layoutTransitionProgress = useArtworkStore(
+    (state) => state.layoutTransitionProgress
+  );
   const archiveData = useArtworkStore((state) => state.archiveData);
   const setArchiveData = useArtworkStore((state) => state.setArchiveData);
 
@@ -108,6 +114,7 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
           zIndex: activeArtwork ? 1 : 2,
         }}
       >
+        <CollectionSidePanel />
         <AnimatePresence>
           {hasCompletedHistorySection && !activeArtwork && (
             <>
@@ -119,7 +126,6 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
               >
                 <InteractiveTimeline />
                 <BrowseByCollectionButton />
-                {/* <CollectionOverlay /> */}
                 <HoverTooltip />
               </MotionDiv>
             </>
@@ -142,6 +148,7 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
             offset={CAMERA_OPTIONS.offset}
           />
           <TimelineTransitionController />
+          <LayoutTransitionController />
           {archiveData.map((item, index) => (
             <ImagePlane
               key={item.id}
@@ -153,6 +160,9 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
                 timelineTransitionProgress,
                 hasCompletedHistorySection,
                 scrollProgress,
+                layoutFrom: layoutId,
+                layoutTo: layoutTargetId ?? layoutId,
+                layoutT: isLayoutTransitioning ? layoutTransitionProgress : 0,
               })}
               textureUrl={item.asset[0].thumb.large}
               width={item.asset[0].width}

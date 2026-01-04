@@ -14,4 +14,6 @@ export { YearDisplay } from "./YearDisplay";
 export { InteractiveTimeline } from "./InteractiveTimeline";
 export { TimelineTransitionController } from "./TimelineTransitionController";
 export { BlurredOverlay } from "./BlurredOverlay";
+export { LayoutTransitionController } from "./LayoutTransitionController";
 export { BrowseByCollectionButton } from "./BrowseByCollectionButton";
+export { CollectionSidePanel } from "./CollectionSidePanel";

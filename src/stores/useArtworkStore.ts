@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import type { ArchiveItem } from "@/types/data-types";
 import type * as THREE from "three";
+import type { LayoutId } from "@/utils/layouts";
 
 interface ArtworkState {
   isHovered: boolean;
@@ -17,8 +18,19 @@ interface ArtworkState {
   timelineYear: number | null;
   // Archive data
   archiveData: ArchiveItem[];
-  isShowingCollection: boolean;
-  setIsShowingCollection: (isShowingCollection: boolean) => void;
+  // Layout system (future-proof: grid-10, grid-6, sphere, etc.)
+  layoutId: LayoutId;
+  layoutTargetId: LayoutId | null;
+  isLayoutTransitioning: boolean;
+  layoutTransitionProgress: number; // 0 -> 1
+  // State to keep track of the current collection
+  currentCollection: string | null;
+  setCurrentCollection: (collection: string | null) => void;
+  clearCurrentCollection: () => void;
+
+  startLayoutTransition: (target: LayoutId) => void;
+  setLayoutTransitionProgress: (progress: number) => void;
+  finishLayoutTransition: () => void;
   setTimelineTransitioning: (isTransitioning: boolean) => void;
   setTimelineTransitionProgress: (progress: number) => void;
   setTimelineYear: (year: number | null) => void;
@@ -51,8 +63,34 @@ export const useArtworkStore = create<ArtworkState>((set) => ({
   timelineTransitionProgress: 1, // Start at grid (1)
   timelineYear: null,
   archiveData: [],
-  isShowingCollection: false,
-  setIsShowingCollection: (isShowingCollection) => set({ isShowingCollection }),
+  currentCollection: null,
+  setCurrentCollection: (collection) => set({ currentCollection: collection }),
+  clearCurrentCollection: () => set({ currentCollection: null }),
+  layoutId: "grid-10",
+  layoutTargetId: null,
+  isLayoutTransitioning: false,
+  layoutTransitionProgress: 0,
+  startLayoutTransition: (target) =>
+    set((state) => {
+      if (state.layoutId === target) return state;
+      return {
+        layoutTargetId: target,
+        isLayoutTransitioning: true,
+        layoutTransitionProgress: 0,
+      };
+    }),
+  setLayoutTransitionProgress: (progress) =>
+    set({ layoutTransitionProgress: progress }),
+  finishLayoutTransition: () =>
+    set((state) => {
+      if (!state.layoutTargetId) return state;
+      return {
+        layoutId: state.layoutTargetId,
+        layoutTargetId: null,
+        isLayoutTransitioning: false,
+        layoutTransitionProgress: 0,
+      };
+    }),
   setTimelineTransitioning: (isTransitioning) =>
     set({ isTimelineTransitioning: isTransitioning }),
   setTimelineTransitionProgress: (progress) =>

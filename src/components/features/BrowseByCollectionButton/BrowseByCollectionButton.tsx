@@ -10,20 +10,20 @@ const cormorantGaramond = Cormorant_Garamond({
 });
 
 export const BrowseByCollectionButton = () => {
-  const setIsShowingCollection = useArtworkStore(
-    (state) => state.setIsShowingCollection
+  const layoutId = useArtworkStore((state) => state.layoutId);
+  const layoutTargetId = useArtworkStore((state) => state.layoutTargetId);
+  const isLayoutTransitioning = useArtworkStore(
+    (state) => state.isLayoutTransitioning
   );
-
-  const isShowingCollection = useArtworkStore(
-    (state) => state.isShowingCollection
+  const startLayoutTransition = useArtworkStore(
+    (state) => state.startLayoutTransition
   );
 
   const handleClick = () => {
-    if (isShowingCollection) {
-      setIsShowingCollection(false);
-    } else {
-      setIsShowingCollection(true);
-    }
+    // Always go to the 6-column grid layout
+    const effectiveLayout = layoutTargetId ?? layoutId;
+    if (effectiveLayout === "grid-6" || isLayoutTransitioning) return;
+    startLayoutTransition("grid-6");
   };
 
   return (
@@ -31,7 +31,7 @@ export const BrowseByCollectionButton = () => {
       onClick={handleClick}
       className={`${styles.button} ${cormorantGaramond.className}`}
     >
-      Browse by Collection
+      {isLayoutTransitioning ? "Switching…" : "Browse by Collection"}
     </MotionButton>
   );
 };

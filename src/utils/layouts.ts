@@ -12,7 +12,8 @@ export const getLayoutPosition = (
 ): THREE.Vector3Tuple => {
   switch (layout) {
     case "grid-10":
-      return getGridPosition(index);
+      // Pass totalItems to getGridPosition for dynamic column calculation
+      return getGridPosition(index, totalItems);
     case "grid-6":
       // "Wrap" layout: keep columns 0..5 fixed; move cols 6..9 down into extra rows.
       return getGrid10To6WrappedPosition(index, totalItems);

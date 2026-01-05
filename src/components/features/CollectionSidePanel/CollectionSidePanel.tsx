@@ -70,7 +70,6 @@ export const CollectionSidePanel = () => {
 
   const handleClick = (collection: string) => {
     const sanitizedCollection = collection
-      .split(":")[0] // Take only the part before the colon
       .replace(/\s*\(\d+\.\d+\)\s*/g, "") // Remove (number.number) pattern if present
       .trim(); // Remove any trailing whitespace
 

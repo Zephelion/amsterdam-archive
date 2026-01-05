@@ -24,7 +24,7 @@ import {
 import { Canvas } from "@react-three/fiber";
 import { getYearFromMetaData } from "@/utils/getYearFromMetaData";
 import { useArtworkStore, useShouldShowUI } from "@/stores";
-import { useGeneratedStory, useTimelineArtworkFetch } from "@/hooks";
+import { useGeneratedStory, useArtworkFetch } from "@/hooks";
 import { amsterdamHistoryContent } from "@/constants/amsterdamHistoryContent";
 import { useRef, useState, useEffect } from "react";
 import { useScroll } from "framer-motion";
@@ -99,7 +99,7 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
   }, [scrollYProgress]);
 
   // Fetch artworks when timeline transition starts
-  useTimelineArtworkFetch();
+  useArtworkFetch();
 
   return (
     <>

@@ -2,11 +2,12 @@ import { useEffect, useRef } from "react";
 import { useArtworkStore } from "@/stores";
 import type { ArchiveItem } from "@/types/data-types";
 
-export const useTimelineArtworkFetch = () => {
+export const useArtworkFetch = () => {
   const isTimelineTransitioning = useArtworkStore(
     (state) => state.isTimelineTransitioning
   );
   const timelineYear = useArtworkStore((state) => state.timelineYear);
+  const currentCollection = useArtworkStore((state) => state.currentCollection);
   const setArchiveData = useArtworkStore((state) => state.setArchiveData);
 
   // Ref to track if we've already fetched for the current transition
@@ -15,10 +16,11 @@ export const useTimelineArtworkFetch = () => {
 
   useEffect(() => {
     if (
-      isTimelineTransitioning &&
-      timelineYear &&
-      timelineYear !== lastTimelineYear.current &&
-      !hasFetchedForTransition.current
+      (isTimelineTransitioning &&
+        timelineYear &&
+        timelineYear !== lastTimelineYear.current &&
+        !hasFetchedForTransition.current) ||
+      currentCollection
     ) {
       hasFetchedForTransition.current = true;
       lastTimelineYear.current = timelineYear;
@@ -26,14 +28,20 @@ export const useTimelineArtworkFetch = () => {
       // Fetch during transition to sphere
       const fetchArtworks = async () => {
         try {
-          const response = await fetch("/api/fetch-by-year", {
+          const response = await fetch("/api/fetch-artworks", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ year: timelineYear }),
+            body: JSON.stringify({
+              year: timelineYear,
+              collection: currentCollection,
+            }),
           });
           const data = await response.json();
+
+          console.log(data);
+          console.log(currentCollection, timelineYear);
 
           const filteredData = data.filter((item: ArchiveItem) => {
             if (!item.asset || item.asset.length === 0) return false;
@@ -58,5 +66,10 @@ export const useTimelineArtworkFetch = () => {
     if (!isTimelineTransitioning) {
       hasFetchedForTransition.current = false;
     }
-  }, [isTimelineTransitioning, timelineYear, setArchiveData]);
+  }, [
+    isTimelineTransitioning,
+    timelineYear,
+    setArchiveData,
+    currentCollection,
+  ]);
 };

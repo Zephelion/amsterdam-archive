@@ -7,4 +7,4 @@ export * from "./useGeneratedStory";
 export * from "./useRelatedArtworks";
 export * from "./useScrollDirection";
 export * from "./useTimelineTransition";
-export * from "./useTimelineArtworkFetch";
+export * from "./useArtworkFetch";

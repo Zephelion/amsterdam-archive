@@ -20,6 +20,7 @@ import {
   BlurredOverlay,
   BrowseByCollectionButton,
   CollectionSidePanel,
+  SkipHistoryButton,
 } from "@/components/features";
 import { Canvas } from "@react-three/fiber";
 import { getYearFromMetaData } from "@/utils/getYearFromMetaData";
@@ -173,13 +174,11 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
 
           <ambientLight intensity={0.1} />
           <directionalLight position={[0, 0, 5]} color="red" />
-          {
-            hasCompletedHistorySection &&
-              !activeArtwork &&
-              !isTimelineTransitioning &&
-              null
-            // <MapControls enablePan={true} enableRotate={false} />
-          }
+          {/* <MapControls enablePan={false} enableRotate={false} /> */}
+          {hasCompletedHistorySection &&
+            !activeArtwork &&
+            !isTimelineTransitioning &&
+            null}
         </Canvas>
       </div>
 
@@ -199,16 +198,22 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
         >
           {!hasStarted && <HeroSection />}
           {hasStarted && (
-            <AmsterdamHistorySection content={amsterdamHistoryContent} />
+            <AmsterdamHistorySection
+              ref={historySectionRef}
+              content={amsterdamHistoryContent}
+            />
           )}
         </div>
       )}
 
       {hasStarted && !hasCompletedHistorySection && (
-        <YearDisplay
-          content={amsterdamHistoryContent}
-          scrollYProgress={scrollYProgress}
-        />
+        <>
+          <YearDisplay
+            content={amsterdamHistoryContent}
+            scrollYProgress={scrollYProgress}
+          />
+          <SkipHistoryButton historySectionRef={historySectionRef} />
+        </>
       )}
       {shouldShowUI && activeArtwork && generatedStory && (
         <>

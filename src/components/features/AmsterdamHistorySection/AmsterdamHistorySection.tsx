@@ -1,6 +1,6 @@
 import { Cormorant_Garamond } from "next/font/google";
 import { StoryParagraph } from "@/components/features";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, forwardRef } from "react";
 import { useScroll } from "framer-motion";
 import { HistoryParagraph } from "@/constants/amsterdamHistoryContent";
 import { useArtworkStore } from "@/stores/useArtworkStore";
@@ -14,10 +14,22 @@ interface AmsterdamHistorySectionProps {
   content: HistoryParagraph[];
 }
 
-export const AmsterdamHistorySection = ({
-  content,
-}: AmsterdamHistorySectionProps) => {
+export const AmsterdamHistorySection = forwardRef<
+  HTMLDivElement,
+  AmsterdamHistorySectionProps
+>(({ content }, ref) => {
   const sectionRef = useRef<HTMLDivElement>(null);
+
+  // Merge refs: set both the forwarded ref and internal ref
+  const setRefs = (element: HTMLDivElement | null) => {
+    sectionRef.current = element;
+    if (typeof ref === "function") {
+      ref(element);
+    } else if (ref) {
+      (ref as React.MutableRefObject<HTMLDivElement | null>).current = element;
+    }
+  };
+
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end end"],
@@ -40,7 +52,7 @@ export const AmsterdamHistorySection = ({
 
   return (
     <section
-      ref={sectionRef}
+      ref={setRefs}
       style={{
         position: "relative",
         height: "5000vh",
@@ -55,4 +67,6 @@ export const AmsterdamHistorySection = ({
       />
     </section>
   );
-};
+});
+
+AmsterdamHistorySection.displayName = "AmsterdamHistorySection";

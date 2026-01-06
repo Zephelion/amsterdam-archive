@@ -25,8 +25,10 @@ interface ArtworkState {
   layoutTransitionProgress: number; // 0 -> 1
   // State to keep track of the current collection
   currentCollection: string | null;
+  pendingCollectionForSphereTransition: string | null; // Collection waiting for layout transition to complete
   setCurrentCollection: (collection: string | null) => void;
   clearCurrentCollection: () => void;
+  setPendingCollectionForSphereTransition: (collection: string | null) => void;
 
   startLayoutTransition: (target: LayoutId) => void;
   setLayoutTransitionProgress: (progress: number) => void;
@@ -64,8 +66,11 @@ export const useArtworkStore = create<ArtworkState>((set) => ({
   timelineYear: null,
   archiveData: [],
   currentCollection: null,
+  pendingCollectionForSphereTransition: null,
   setCurrentCollection: (collection) => set({ currentCollection: collection }),
   clearCurrentCollection: () => set({ currentCollection: null }),
+  setPendingCollectionForSphereTransition: (collection) =>
+    set({ pendingCollectionForSphereTransition: collection }),
   layoutId: "grid-10",
   layoutTargetId: null,
   isLayoutTransitioning: false,

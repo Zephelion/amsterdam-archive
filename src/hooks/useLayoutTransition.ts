@@ -10,12 +10,38 @@ export const useLayoutTransition = () => {
   const finishLayoutTransition = useArtworkStore(
     (state) => state.finishLayoutTransition
   );
+  const setSphereTransitioning = useArtworkStore(
+    (state) => state.setSphereTransitioning
+  );
+  const setCurrentCollection = useArtworkStore(
+    (state) => state.setCurrentCollection
+  );
+  const setPendingCollectionForSphereTransition = useArtworkStore(
+    (state) => state.setPendingCollectionForSphereTransition
+  );
 
   useFrame((_, delta) => {
     // Read latest values from the store each frame to avoid stale closure values.
-    const { isLayoutTransitioning, layoutTransitionProgress } =
-      useArtworkStore.getState();
-    if (!isLayoutTransitioning) return;
+    const {
+      isLayoutTransitioning,
+      layoutTransitionProgress,
+      layoutId,
+      pendingCollectionForSphereTransition,
+    } = useArtworkStore.getState();
+
+    if (!isLayoutTransitioning) {
+      // Check if we just finished transitioning to grid-10 and have a pending collection
+      if (
+        layoutId === "grid-10" &&
+        pendingCollectionForSphereTransition !== null
+      ) {
+        // Set the collection and trigger sphere transition
+        setCurrentCollection(pendingCollectionForSphereTransition);
+        setPendingCollectionForSphereTransition(null);
+        setSphereTransitioning(true);
+      }
+      return;
+    }
 
     const next = Math.min(
       1,

@@ -26,8 +26,8 @@ export const CollectionSidePanel = () => {
     (state) => state.clearCurrentCollection
   );
 
-  const setSphereTransitioning = useArtworkStore(
-    (state) => state.setSphereTransitioning
+  const setPendingCollectionForSphereTransition = useArtworkStore(
+    (state) => state.setPendingCollectionForSphereTransition
   );
 
   // Open ONLY after planes finished arriving in grid-6 (layoutId is committed),
@@ -77,9 +77,10 @@ export const CollectionSidePanel = () => {
       .replace(/\s*\(\d+\.\d+\)\s*/g, "") // Remove (number.number) pattern if present
       .trim(); // Remove any trailing whitespace
 
-    setCurrentCollection(sanitizedCollection);
-    // Start sphere transition when collection is clicked
-    setSphereTransitioning(true);
+    // Store the collection for sphere transition (will trigger after layout transition completes)
+    setPendingCollectionForSphereTransition(sanitizedCollection);
+    // First, transition back to grid-10 (this will close the side panel)
+    startLayoutTransition("grid-10");
   };
 
   return (

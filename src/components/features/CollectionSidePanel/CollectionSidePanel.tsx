@@ -26,6 +26,10 @@ export const CollectionSidePanel = () => {
     (state) => state.clearCurrentCollection
   );
 
+  const setSphereTransitioning = useArtworkStore(
+    (state) => state.setSphereTransitioning
+  );
+
   // Open ONLY after planes finished arriving in grid-6 (layoutId is committed),
   // but close immediately when we start transitioning back to grid-10.
   const isClosingToGrid10 =
@@ -74,6 +78,8 @@ export const CollectionSidePanel = () => {
       .trim(); // Remove any trailing whitespace
 
     setCurrentCollection(sanitizedCollection);
+    // Start sphere transition when collection is clicked
+    setSphereTransitioning(true);
   };
 
   return (

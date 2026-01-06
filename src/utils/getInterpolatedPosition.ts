@@ -6,8 +6,8 @@ import type { LayoutId } from "./layouts";
 interface GetInterpolatedPositionParams {
   index: number;
   totalItems: number;
-  isTimelineTransitioning: boolean;
-  timelineTransitionProgress: number;
+  isSphereTransitioning: boolean;
+  sphereTransitionProgress: number;
   hasCompletedHistorySection: boolean;
   scrollProgress: number;
   layoutFrom: LayoutId;
@@ -18,8 +18,8 @@ interface GetInterpolatedPositionParams {
 export const getInterpolatedPosition = ({
   index,
   totalItems,
-  isTimelineTransitioning,
-  timelineTransitionProgress,
+  isSphereTransitioning,
+  sphereTransitionProgress,
   hasCompletedHistorySection,
   scrollProgress,
   layoutFrom,
@@ -36,10 +36,10 @@ export const getInterpolatedPosition = ({
     THREE.MathUtils.lerp(fromPos[2], toPos[2], layoutT),
   ];
 
-  // Use timeline transition progress if transitioning, otherwise use scroll progress
+  // Use sphere transition progress if transitioning, otherwise use scroll progress
   let t: number;
-  if (isTimelineTransitioning) {
-    t = timelineTransitionProgress;
+  if (isSphereTransitioning) {
+    t = sphereTransitionProgress;
   } else {
     t = hasCompletedHistorySection ? 1 : scrollProgress;
   }

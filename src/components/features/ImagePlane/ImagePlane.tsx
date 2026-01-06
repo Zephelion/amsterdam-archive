@@ -80,17 +80,17 @@ export const ImagePlane = ({
 
   useScale(meshRef, isActive, hasActiveArtwork, SCALE_OPTIONS);
 
-  const timelineTransitionProgress = useArtworkStore(
-    (state) => state.timelineTransitionProgress
+  const sphereTransitionProgress = useArtworkStore(
+    (state) => state.sphereTransitionProgress
   );
 
-  const isTimelineTransitioning = useArtworkStore(
-    (state) => state.isTimelineTransitioning
+  const isSphereTransitioning = useArtworkStore(
+    (state) => state.isSphereTransitioning
   );
 
   // Calculate transition-based opacity
   const transitionOpacity = useMemo(() => {
-    if (!isTimelineTransitioning) {
+    if (!isSphereTransitioning) {
       return 1; // Fully visible when not transitioning
     }
 
@@ -99,8 +99,8 @@ export const ImagePlane = ({
     // - Stay invisible during waiting (at 0)
     // - Fade in as we go back to grid (0 → 1): opacity goes 0 → 1
     // Use progress directly: 0 = invisible, 1 = visible
-    return timelineTransitionProgress;
-  }, [isTimelineTransitioning, timelineTransitionProgress]);
+    return sphereTransitionProgress;
+  }, [isSphereTransitioning, sphereTransitionProgress]);
 
   // Combine depth opacity with transition opacity
   const finalOpacity = useMemo(() => {

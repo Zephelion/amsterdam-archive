@@ -9,23 +9,27 @@ const TRANSITION_DURATION = 2000; // 2 seconds for each phase
 const WAIT_DURATION = 2000; // 2 seconds wait between transitions
 const CAMERA_LERP_SPEED = 0.05;
 
-export const useTimelineTransition = () => {
+/**
+ * Generic hook for transitioning to sphere and back to grid.
+ * Works for both timeline (year-based) and collection-based transitions.
+ */
+export const useSphereTransition = () => {
   const { camera } = useThree();
-  const isTimelineTransitioning = useArtworkStore(
-    (state) => state.isTimelineTransitioning
+  const isSphereTransitioning = useArtworkStore(
+    (state) => state.isSphereTransitioning
   );
-  const setTimelineTransitionProgress = useArtworkStore(
-    (state) => state.setTimelineTransitionProgress
+  const setSphereTransitionProgress = useArtworkStore(
+    (state) => state.setSphereTransitionProgress
   );
-  const setTimelineTransitioning = useArtworkStore(
-    (state) => state.setTimelineTransitioning
+  const setSphereTransitioning = useArtworkStore(
+    (state) => state.setSphereTransitioning
   );
 
   const transitionStartTime = useRef<number | null>(null);
   const phase = useRef<"toSphere" | "waiting" | "toGrid">("toSphere");
 
   useFrame((state) => {
-    if (!isTimelineTransitioning) {
+    if (!isSphereTransitioning) {
       transitionStartTime.current = null;
       return;
     }
@@ -42,7 +46,7 @@ export const useTimelineTransition = () => {
       // Transition from grid (1) to sphere (0)
       const progress = Math.min(1, elapsed / TRANSITION_DURATION);
       const t = 1 - progress; // Reverse: 1 -> 0
-      setTimelineTransitionProgress(t);
+      setSphereTransitionProgress(t);
 
       // Transition camera to base position
       const targetPos = new THREE.Vector3(...CAMERA_BASE_POSITION);
@@ -65,7 +69,7 @@ export const useTimelineTransition = () => {
     } else if (phase.current === "toGrid") {
       // Transition from sphere (0) to grid (1)
       const progress = Math.min(1, elapsed / TRANSITION_DURATION);
-      setTimelineTransitionProgress(progress);
+      setSphereTransitionProgress(progress);
 
       // Transition camera to grid position
       const targetPos = new THREE.Vector3(...CAMERA_GRID_POSITION);
@@ -73,7 +77,7 @@ export const useTimelineTransition = () => {
 
       if (progress >= 1) {
         // Transition complete
-        setTimelineTransitioning(false);
+        setSphereTransitioning(false);
         phase.current = "toSphere";
         transitionStartTime.current = null;
       }

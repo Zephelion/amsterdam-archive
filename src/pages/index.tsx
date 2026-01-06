@@ -56,11 +56,11 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
     (state) => state.hasCompletedHistorySection
   );
 
-  const isTimelineTransitioning = useArtworkStore(
-    (state) => state.isTimelineTransitioning
+  const isSphereTransitioning = useArtworkStore(
+    (state) => state.isSphereTransitioning
   );
-  const timelineTransitionProgress = useArtworkStore(
-    (state) => state.timelineTransitionProgress
+  const sphereTransitionProgress = useArtworkStore(
+    (state) => state.sphereTransitionProgress
   );
   const layoutId = useArtworkStore((state) => state.layoutId);
   const layoutTargetId = useArtworkStore((state) => state.layoutTargetId);
@@ -157,8 +157,8 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
               position={getInterpolatedPosition({
                 index,
                 totalItems: archiveData.length,
-                isTimelineTransitioning,
-                timelineTransitionProgress,
+                isSphereTransitioning,
+                sphereTransitionProgress,
                 hasCompletedHistorySection,
                 scrollProgress,
                 layoutFrom: layoutId,
@@ -177,7 +177,7 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
           {/* <MapControls enablePan={false} enableRotate={false} /> */}
           {hasCompletedHistorySection &&
             !activeArtwork &&
-            !isTimelineTransitioning &&
+            !isSphereTransitioning &&
             null}
         </Canvas>
       </div>

@@ -1,6 +1,6 @@
-import { useTimelineTransition } from "@/hooks/useTimelineTransition";
+import { useSphereTransition } from "@/hooks/useSphereTransition";
 
 export const TimelineTransitionController = () => {
-  useTimelineTransition();
+  useSphereTransition();
   return null;
 };

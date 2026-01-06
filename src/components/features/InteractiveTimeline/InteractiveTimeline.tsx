@@ -21,8 +21,8 @@ export const InteractiveTimeline = () => {
   const [year, setYear] = useState(MIN_YEAR);
   const timelineRef = useRef<HTMLDivElement>(null);
 
-  const setTimelineTransitioning = useArtworkStore(
-    (state) => state.setTimelineTransitioning
+  const setSphereTransitioning = useArtworkStore(
+    (state) => state.setSphereTransitioning
   );
   const setTimelineYear = useArtworkStore((state) => state.setTimelineYear);
 
@@ -50,9 +50,9 @@ export const InteractiveTimeline = () => {
   };
 
   const handleClick = () => {
-    // Start timeline transition
+    // Start sphere transition
     setTimelineYear(year);
-    setTimelineTransitioning(true);
+    setSphereTransitioning(true);
   };
 
   // Calculate dot positions - create dots for each 50 years

@@ -12,9 +12,9 @@ interface ArtworkState {
   generatedStory: string | null;
   hasStarted: boolean;
   hasCompletedHistorySection: boolean;
-  // Timeline transition state
-  isTimelineTransitioning: boolean;
-  timelineTransitionProgress: number; // 0 = sphere, 1 = grid
+  // Sphere transition state (used for both timeline and collection)
+  isSphereTransitioning: boolean;
+  sphereTransitionProgress: number; // 0 = sphere, 1 = grid
   timelineYear: number | null;
   // Archive data
   archiveData: ArchiveItem[];
@@ -31,8 +31,8 @@ interface ArtworkState {
   startLayoutTransition: (target: LayoutId) => void;
   setLayoutTransitionProgress: (progress: number) => void;
   finishLayoutTransition: () => void;
-  setTimelineTransitioning: (isTransitioning: boolean) => void;
-  setTimelineTransitionProgress: (progress: number) => void;
+  setSphereTransitioning: (isTransitioning: boolean) => void;
+  setSphereTransitionProgress: (progress: number) => void;
   setTimelineYear: (year: number | null) => void;
   setArchiveData: (data: ArchiveItem[]) => void;
   setCameraTransitioning: (
@@ -59,8 +59,8 @@ export const useArtworkStore = create<ArtworkState>((set) => ({
   generatedStory: null,
   hasStarted: false,
   hasCompletedHistorySection: false,
-  isTimelineTransitioning: false,
-  timelineTransitionProgress: 1, // Start at grid (1)
+  isSphereTransitioning: false,
+  sphereTransitionProgress: 1, // Start at grid (1)
   timelineYear: null,
   archiveData: [],
   currentCollection: null,
@@ -91,10 +91,10 @@ export const useArtworkStore = create<ArtworkState>((set) => ({
         layoutTransitionProgress: 0,
       };
     }),
-  setTimelineTransitioning: (isTransitioning) =>
-    set({ isTimelineTransitioning: isTransitioning }),
-  setTimelineTransitionProgress: (progress) =>
-    set({ timelineTransitionProgress: progress }),
+  setSphereTransitioning: (isTransitioning) =>
+    set({ isSphereTransitioning: isTransitioning }),
+  setSphereTransitionProgress: (progress) =>
+    set({ sphereTransitionProgress: progress }),
   setTimelineYear: (year) => set({ timelineYear: year }),
   setArchiveData: (data) => set({ archiveData: data }),
   setCameraTransitioning: (hasCompletedCameraTransitionToArtwork) =>

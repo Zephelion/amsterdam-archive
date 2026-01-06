@@ -3,8 +3,8 @@ import { useArtworkStore } from "@/stores";
 import type { ArchiveItem } from "@/types/data-types";
 
 export const useArtworkFetch = () => {
-  const isTimelineTransitioning = useArtworkStore(
-    (state) => state.isTimelineTransitioning
+  const isSphereTransitioning = useArtworkStore(
+    (state) => state.isSphereTransitioning
   );
   const timelineYear = useArtworkStore((state) => state.timelineYear);
   const currentCollection = useArtworkStore((state) => state.currentCollection);
@@ -13,17 +13,22 @@ export const useArtworkFetch = () => {
   // Ref to track if we've already fetched for the current transition
   const hasFetchedForTransition = useRef(false);
   const lastTimelineYear = useRef<number | null>(null);
+  const lastCollection = useRef<string | null>(null);
 
   useEffect(() => {
     if (
-      (isTimelineTransitioning &&
+      (isSphereTransitioning &&
         timelineYear &&
         timelineYear !== lastTimelineYear.current &&
         !hasFetchedForTransition.current) ||
-      currentCollection
+      (isSphereTransitioning &&
+        currentCollection &&
+        currentCollection !== lastCollection.current &&
+        !hasFetchedForTransition.current)
     ) {
       hasFetchedForTransition.current = true;
-      lastTimelineYear.current = timelineYear;
+      if (timelineYear) lastTimelineYear.current = timelineYear;
+      if (currentCollection) lastCollection.current = currentCollection;
 
       // Fetch during transition to sphere
       const fetchArtworks = async () => {
@@ -63,13 +68,8 @@ export const useArtworkFetch = () => {
     }
 
     // Reset fetch flag when transition ends
-    if (!isTimelineTransitioning) {
+    if (!isSphereTransitioning) {
       hasFetchedForTransition.current = false;
     }
-  }, [
-    isTimelineTransitioning,
-    timelineYear,
-    setArchiveData,
-    currentCollection,
-  ]);
+  }, [isSphereTransitioning, timelineYear, setArchiveData, currentCollection]);
 };

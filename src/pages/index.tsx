@@ -21,6 +21,7 @@ import {
   BrowseByCollectionButton,
   CollectionSidePanel,
   SkipHistoryButton,
+  CanvasScrollController,
 } from "@/components/features";
 import { Canvas } from "@react-three/fiber";
 import { getYearFromMetaData } from "@/utils/getYearFromMetaData";
@@ -36,7 +37,6 @@ import {
 } from "@/constants/camera";
 import { AnimatePresence } from "framer-motion";
 import { MotionDiv } from "@/components/features/MotionElements";
-import { MapControls } from "@react-three/drei";
 import { getInterpolatedPosition } from "@/utils/getInterpolatedPosition";
 
 interface PageProps {
@@ -174,11 +174,9 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
 
           <ambientLight intensity={0.1} />
           <directionalLight position={[0, 0, 5]} color="red" />
-          {/* <MapControls enablePan={false} enableRotate={false} /> */}
           {hasCompletedHistorySection &&
             !activeArtwork &&
-            !isSphereTransitioning &&
-            null}
+            !isSphereTransitioning && <CanvasScrollController />}
         </Canvas>
       </div>
 
@@ -230,7 +228,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     // Fetch data
     const data = await fetchArchiveData({
       page: 1,
-      rows: 100,
+      rows: 200,
       lang: "nl",
       sort: "asc",
     });

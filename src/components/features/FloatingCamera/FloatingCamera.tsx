@@ -14,13 +14,12 @@ export const FloatingCamera = () => {
   );
 
   useFrame((state) => {
-    // Don't float during artwork zoom or sphere transition
-    if (activeArtwork || isSphereTransitioning) return;
+    // Don't float during artwork zoom, sphere transition, or in grid view
+    if (activeArtwork || isSphereTransitioning || hasCompletedHistorySection)
+      return;
 
-    // Determine target base position based on history section completion
-    const targetBasePosition = hasCompletedHistorySection
-      ? CAMERA_GRID_POSITION
-      : CAMERA_BASE_POSITION;
+    // Only float in the initial view (before grid)
+    const targetBasePosition = CAMERA_BASE_POSITION;
 
     const time = state.clock.elapsedTime;
 

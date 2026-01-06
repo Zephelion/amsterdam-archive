@@ -8,3 +8,4 @@ export * from "./useRelatedArtworks";
 export * from "./useScrollDirection";
 export * from "./useSphereTransition";
 export * from "./useArtworkFetch";
+export * from "./useCanvasScroll";

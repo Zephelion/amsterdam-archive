@@ -18,3 +18,4 @@ export { LayoutTransitionController } from "./LayoutTransitionController";
 export { BrowseByCollectionButton } from "./BrowseByCollectionButton";
 export { CollectionSidePanel } from "./CollectionSidePanel";
 export { SkipHistoryButton } from "./SkipHistoryButton";
+export { CanvasScrollController } from "./CanvasScrollController";

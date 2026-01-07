@@ -7,7 +7,7 @@ export { ScrollCTA } from "./ScrollCTA";
 export { ScrollController } from "./ScrollController";
 export { StorySection } from "./StorySection";
 export { StoryParagraph } from "./StoryParagraph";
-export { TimelineSection } from "./TimelineSection";
+export { CollectionSection } from "./CollectionSection";
 export { HeroSection } from "./HeroSection";
 export { AmsterdamHistorySection } from "./AmsterdamHistorySection";
 export { YearDisplay } from "./YearDisplay";

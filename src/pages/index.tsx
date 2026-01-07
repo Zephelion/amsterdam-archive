@@ -10,7 +10,7 @@ import {
   ArtworkTitle,
   ScrollCTA,
   StorySection,
-  TimelineSection,
+  CollectionSection,
   HeroSection,
   AmsterdamHistorySection,
   YearDisplay,
@@ -221,7 +221,7 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
       {shouldShowUI && activeArtwork && generatedStory && (
         <>
           <StorySection content={generatedStory} />
-          {/* <TimelineSection /> */}
+          <CollectionSection />
         </>
       )}
     </>

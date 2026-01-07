@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useScroll, useTransform } from "framer-motion";
 import { MotionDiv } from "../MotionElements";
 
-export const TimelineSection = () => {
+export const CollectionSection = () => {
   const activeArtwork = useArtworkStore((state) => state.activeArtwork);
   const searchQuery = activeArtwork?.title;
   if (!searchQuery) return null;

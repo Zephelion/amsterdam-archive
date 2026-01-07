@@ -1,6 +1,7 @@
-import { MotionButton } from "../MotionElements";
+import { MotionButton, MotionDiv } from "../MotionElements";
 import { useArtworkStore } from "@/stores";
 import { Cormorant_Garamond } from "next/font/google";
+import { HERO_CONTENT } from "@/constants/heroContent";
 
 const cormorantGaramond = Cormorant_Garamond({
   subsets: ["latin"],
@@ -15,10 +16,8 @@ export const HeroSection = () => {
     setHasStarted(true);
   };
 
-  //   if (!hasStarted) return null;
-
   return (
-    <div
+    <MotionDiv
       style={{
         display: "flex",
         justifyContent: "center",
@@ -36,11 +35,11 @@ export const HeroSection = () => {
         }}
       >
         <span style={{ fontSize: "1rem", fontWeight: "200" }}>
-          Reimagining the Stadsarchief Amsterdam
+          {HERO_CONTENT.subtitle}
         </span>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <span>Uncover the layers</span>
-          <span>Curated stories of Amsterdam's history</span>
+          <span>{HERO_CONTENT.titleLine1}</span>
+          <span>{HERO_CONTENT.titleLine2}</span>
         </div>
       </h1>
       <MotionButton
@@ -60,8 +59,8 @@ export const HeroSection = () => {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
       >
-        Start
+        {HERO_CONTENT.buttonText}
       </MotionButton>
-    </div>
+    </MotionDiv>
   );
 };

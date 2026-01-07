@@ -66,8 +66,6 @@ export async function fetchArchiveData(
   const url = buildUrl(options);
   const response = await fetch(url);
 
-  console.log(url);
-
   if (!response.ok) {
     const errorText = await response.text();
     console.error("Error response:", errorText);

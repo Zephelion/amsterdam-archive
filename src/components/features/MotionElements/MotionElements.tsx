@@ -11,3 +11,4 @@ export const MotionH5 = motion.h5;
 export const MotionH6 = motion.h6;
 export const MotionImg = motion.img;
 export const MotionButton = motion.button;
+export const MotionSvg = motion.svg;

@@ -45,9 +45,6 @@ export const useArtworkFetch = () => {
           });
           const data = await response.json();
 
-          console.log(data);
-          console.log(currentCollection, timelineYear);
-
           const filteredData = data.filter((item: ArchiveItem) => {
             if (!item.asset || item.asset.length === 0) return false;
             if (!item.asset[0].thumb) return false;

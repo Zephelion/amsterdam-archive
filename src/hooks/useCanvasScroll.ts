@@ -92,16 +92,10 @@ export const useCanvasScroll = () => {
       }
 
       // Vertical scrolling (deltaY)
-      // Positive deltaY = scroll down = camera moves down (negative Y)
-      // Negative deltaY = scroll up = camera moves up (positive Y)
       targetPosition.current.y -= deltaY;
 
       // Horizontal scrolling (deltaX) for trackpad users
-      // Positive deltaX = scroll right = camera moves left (negative X)
-      // Negative deltaX = scroll left = camera moves right (positive X)
       targetPosition.current.x += deltaX;
-
-      // Don't hard clamp - let spring physics handle it
     };
 
     // Add wheel listener to the canvas element

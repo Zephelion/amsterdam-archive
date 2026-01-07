@@ -22,6 +22,7 @@ import {
   CollectionSidePanel,
   SkipHistoryButton,
   CanvasScrollController,
+  ScrollIndicator,
 } from "@/components/features";
 import { Canvas } from "@react-three/fiber";
 import { getYearFromMetaData } from "@/utils/getYearFromMetaData";
@@ -183,6 +184,8 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
       <AnimatePresence>
         {!hasCompletedHistorySection && <BlurredOverlay />}
       </AnimatePresence>
+
+      <ScrollIndicator />
 
       {/* Content overlay - scrollable */}
       {!hasCompletedHistorySection && (

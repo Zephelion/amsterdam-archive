@@ -20,3 +20,4 @@ export { CollectionSidePanel } from "./CollectionSidePanel";
 export { SkipHistoryButton } from "./SkipHistoryButton";
 export { CanvasScrollController } from "./CanvasScrollController";
 export { ScrollIndicator } from "./ScrollIndicator";
+export { EmptyState } from "./EmptyState";

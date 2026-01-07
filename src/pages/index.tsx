@@ -23,6 +23,7 @@ import {
   SkipHistoryButton,
   CanvasScrollController,
   ScrollIndicator,
+  EmptyState,
 } from "@/components/features";
 import { Canvas } from "@react-three/fiber";
 import { getYearFromMetaData } from "@/utils/getYearFromMetaData";
@@ -186,6 +187,7 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
       </AnimatePresence>
 
       <ScrollIndicator />
+      <EmptyState />
 
       {/* Content overlay - scrollable */}
       {!hasCompletedHistorySection && (

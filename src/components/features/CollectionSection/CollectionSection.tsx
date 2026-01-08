@@ -1,77 +1,116 @@
-import { useRelatedArtworks } from "@/hooks";
 import { useArtworkStore } from "@/stores";
-import { useEffect, useRef, useState } from "react";
-import { useScroll, useTransform } from "framer-motion";
-import { MotionDiv } from "../MotionElements";
-import { CollectionSectionTitle } from "@/components/features";
+import { Cormorant_Garamond } from "next/font/google";
+import styles from "./CollectionSection.module.css";
+import { useGeneratedStory } from "@/hooks";
+
+const cormorantGaramond = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["300", "400", "600"],
+});
 
 export const CollectionSection = () => {
   const activeArtwork = useArtworkStore((state) => state.activeArtwork);
-  const searchQuery = activeArtwork?.title;
-  if (!searchQuery) return null;
-  const { relatedArtworks } = useRelatedArtworks(searchQuery);
+  const clearActiveArtwork = useArtworkStore(
+    (state) => state.clearActiveArtwork
+  );
+  const { generatedStory } = useGeneratedStory(activeArtwork);
 
-  const metadataValue = activeArtwork?.metadata.find(
-    (meta) => meta.field === "dc_provenance"
-  )?.value;
-  const collectionTitle =
-    typeof metadataValue === "string" ? metadataValue : undefined;
+  if (!activeArtwork) return null;
 
-  const sectionRef = useRef<HTMLDivElement>(null);
+  // Extract metadata
+  const creator =
+    activeArtwork.metadata.find((meta) => meta.field === "dc_creator")?.value ||
+    "Unknown";
+  const year =
+    activeArtwork.metadata.find((meta) => meta.field === "dc_date")?.value ||
+    activeArtwork.year ||
+    "N/A";
+  const dimensions =
+    activeArtwork.metadata.find((meta) => meta.field === "dc_format")?.value ||
+    `${activeArtwork.asset[0]?.width} × ${activeArtwork.asset[0]?.height}px`;
+  const collection =
+    activeArtwork.metadata.find((meta) => meta.field === "dc_provenance")
+      ?.value || "Amsterdam Archive";
 
-  const TIMELINE_SETTINGS = {
-    barWidth: 2.5,
-    gap: 5,
-  };
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end end"],
-  });
+  // Format article number
+  const articleNumber = activeArtwork.id.slice(0, 6).toUpperCase();
 
   return (
     <section
-      ref={sectionRef}
-      style={{
-        height: "100vh",
-        background: "white",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
+      className={`${styles.container} ${cormorantGaramond.className}`}
+      style={{ fontFamily: cormorantGaramond.style.fontFamily }}
     >
-      <CollectionSectionTitle title={collectionTitle} />
-      {/* Related Artworks */}
-      {relatedArtworks.length > 0 && (
-        <div
-          style={{
-            display: "flex",
-            gap: "10px",
-            alignItems: "center",
-            justifyContent: "center",
-            flexWrap: "wrap",
-            maxWidth: "90vw",
-          }}
-        >
-          {relatedArtworks.map((artwork) => (
-            <img
-              key={artwork.id}
-              src={
-                artwork.asset[0]?.thumb?.small ||
-                artwork.asset[0]?.thumb?.medium
-              }
-              alt={artwork.title}
-              style={{
-                width: "80px",
-                height: "80px",
-                objectFit: "cover",
-                borderRadius: "4px",
-              }}
-            />
-          ))}
+      {/* Back Button */}
+      <button className={styles.backButton} onClick={clearActiveArtwork}>
+        <span>←</span>
+        <span>BACK TO ALL</span>
+      </button>
+
+      {/* Title Section */}
+      <div className={styles.titleSection}>
+        <h1 className={styles.title}>{activeArtwork.title}</h1>
+      </div>
+
+      {/* Main Image */}
+      <div className={styles.imageSection}>
+        <img
+          src={activeArtwork.asset[0]?.thumb?.large}
+          alt={activeArtwork.title}
+          className={styles.artworkImage}
+        />
+      </div>
+
+      {/* Description Section */}
+      <div className={styles.descriptionSection}>
+        <p className={styles.description}>
+          {generatedStory ||
+            activeArtwork.description ||
+            "Exploring Amsterdam's rich history through carefully curated archival materials. Each piece tells a unique story of the city's cultural heritage."}
+        </p>
+
+        <div className={styles.articleNumber}>
+          <span>Article:</span>
+          <strong>{articleNumber}</strong>
         </div>
-      )}
+      </div>
+
+      {/* Metadata Section */}
+      <div className={styles.metadataSection}>
+        <div className={styles.metadataItem}>
+          <p className={styles.metadataLabel}>CREATOR</p>
+          <p className={styles.metadataValue}>
+            {typeof creator === "string" ? creator : "Unknown"}
+          </p>
+        </div>
+
+        <div className={styles.metadataItem}>
+          <p className={styles.metadataLabel}>YEAR</p>
+          <p className={styles.metadataValue}>
+            {typeof year === "string" ? year : String(year)}
+          </p>
+        </div>
+
+        <div className={styles.metadataItem}>
+          <p className={styles.metadataLabel}>DIMENSIONS</p>
+          <p className={styles.metadataValue}>
+            {typeof dimensions === "string" ? dimensions : "N/A"}
+          </p>
+        </div>
+
+        <div className={styles.metadataItem}>
+          <p className={styles.metadataLabel}>COLLECTION</p>
+          <p className={styles.metadataValue}>
+            {typeof collection === "string" ? collection : "N/A"}
+          </p>
+        </div>
+      </div>
+
+      {/* Price Section (Using year as artistic display) */}
+      <div className={styles.priceSection}>
+        <p className={styles.price}>
+          {typeof year === "string" ? year : String(year)}
+        </p>
+      </div>
     </section>
   );
 };

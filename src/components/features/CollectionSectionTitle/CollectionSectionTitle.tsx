@@ -37,7 +37,7 @@ export const CollectionSectionTitle = ({
       )}
 
       {/* Bottom part */}
-      {secondPart && (
+      {/* {secondPart && (
         <h2
           style={{
             fontFamily: cormorantGaramond.style.fontFamily,
@@ -55,7 +55,7 @@ export const CollectionSectionTitle = ({
         >
           {secondPart}
         </h2>
-      )}
+      )} */}
     </>
   );
 };

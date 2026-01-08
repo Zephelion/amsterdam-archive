@@ -1,0 +1,164 @@
+.container {
+  min-height: 100vh;
+  background: #ffffff;
+  padding: 4rem 6rem;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-rows: auto 1fr auto;
+  gap: 3rem;
+  position: relative;
+}
+
+.backButton {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 0;
+  color: #8B8B8B;
+  transition: color 0.3s ease;
+}
+
+.backButton:hover {
+  color: #000000;
+}
+
+.titleSection {
+  grid-column: 1;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 2rem;
+}
+
+.title {
+  font-size: 4rem;
+  font-weight: 400;
+  line-height: 1;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+.imageSection {
+  grid-column: 2;
+  grid-row: 1 / 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+.artworkImage {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.descriptionSection {
+  grid-column: 3;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-top: 2rem;
+}
+
+.description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #4A4A4A;
+  margin: 0;
+}
+
+.articleNumber {
+  font-size: 0.875rem;
+  color: #8B8B8B;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.metadataSection {
+  grid-column: 1;
+  grid-row: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.metadataItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.metadataLabel {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8B8B8B;
+  margin: 0;
+}
+
+.metadataValue {
+  font-size: 1rem;
+  color: #000000;
+  margin: 0;
+}
+
+.priceSection {
+  grid-column: 3;
+  grid-row: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.price {
+  font-size: 4rem;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  color: #C4A57B;
+  margin: 0;
+}
+
+.actionButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.actionButton {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 1px solid #000000;
+  background: transparent;
+  color: #000000;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.actionButton.primary {
+  background: #000000;
+  color: #ffffff;
+}
+
+.actionButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}

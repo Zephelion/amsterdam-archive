@@ -1,0 +1,1 @@
+export { CollectionSectionTitle } from "./CollectionSectionTitle";

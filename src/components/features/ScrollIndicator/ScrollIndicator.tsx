@@ -18,21 +18,24 @@ export const ScrollIndicator = () => {
 
   useEffect(() => {
     if (hasStarted && !hasCompletedHistorySection) {
+      let scrollListener: (() => void) | null = null;
+
       // Show indicator after a brief delay
       const showTimer = setTimeout(() => {
         setIsVisible(true);
+
+        // Add scroll listener only after indicator is visible
+        scrollListener = () => {
+          setIsVisible(false);
+        };
+        window.addEventListener("scroll", scrollListener, { once: true });
       }, 500);
-
-      // Hide on scroll
-      const handleScroll = () => {
-        setIsVisible(false);
-      };
-
-      window.addEventListener("scroll", handleScroll, { once: true });
 
       return () => {
         clearTimeout(showTimer);
-        window.removeEventListener("scroll", handleScroll);
+        if (scrollListener) {
+          window.removeEventListener("scroll", scrollListener);
+        }
       };
     } else {
       setIsVisible(false);

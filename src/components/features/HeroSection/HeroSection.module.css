@@ -1,0 +1,33 @@
+.startButton {
+  background-color: black;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  overflow: hidden;
+  transition: color 0.3s ease;
+  position: relative;
+}
+
+.startButton::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #c4a57b;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  z-index: 0;
+}
+
+.startButton:hover::before {
+  transform: translateY(0);
+}
+
+.buttonText {
+  position: relative;
+  z-index: 1;
+}

@@ -58,7 +58,7 @@ export const HeroSection = () => {
           style={{
             fontFamily: cormorantGaramond.style.fontFamily,
             fontSize: "6rem",
-            fontWeight: "400",
+            fontWeight: "100",
             color: "#000000",
             margin: 0,
             lineHeight: "1",

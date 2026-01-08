@@ -7,10 +7,9 @@ import {
   FloatingCamera,
   HoverTooltip,
   CameraController,
-  ArtworkTitle,
   ScrollCTA,
   StorySection,
-  CollectionSection,
+  ActiveArtworkOverlay,
   HeroSection,
   AmsterdamHistorySection,
   YearDisplay,
@@ -134,8 +133,8 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
             </>
           )}
         </AnimatePresence>
-        <ArtworkTitle />
         <ScrollCTA />
+        {shouldShowUI && activeArtwork && <ActiveArtworkOverlay />}
         <Canvas
           camera={{
             position: hasCompletedHistorySection
@@ -219,10 +218,7 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
         </>
       )}
       {shouldShowUI && activeArtwork && generatedStory && (
-        <>
-          <StorySection content={generatedStory} />
-          <CollectionSection />
-        </>
+        <StorySection content={generatedStory} />
       )}
     </>
   );

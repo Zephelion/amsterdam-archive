@@ -1,17 +1,24 @@
 .container {
-  min-height: 100vh;
-  background: #ffffff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
   padding: 4rem 6rem;
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: 1fr 1fr;
   grid-template-rows: auto 1fr auto;
   gap: 3rem;
-  position: relative;
+  z-index: 1000;
+  overflow-y: auto;
+  pointer-events: none;
 }
 
 .backButton {
-  grid-column: 1;
-  grid-row: 1;
+  position: fixed;
+  top: 4rem;
+  left: 6rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -22,8 +29,10 @@
   border: none;
   background: transparent;
   padding: 0;
-  color: #8B8B8B;
+  color: #8b8b8b;
   transition: color 0.3s ease;
+  pointer-events: auto;
+  z-index: 1001;
 }
 
 .backButton:hover {
@@ -46,26 +55,11 @@
   margin: 0;
   text-transform: uppercase;
   letter-spacing: -0.02em;
-}
-
-.imageSection {
-  grid-column: 2;
-  grid-row: 1 / 4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 0;
-}
-
-.artworkImage {
-  max-width: 100%;
-  max-height: 70vh;
-  object-fit: contain;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  color: #000000;
 }
 
 .descriptionSection {
-  grid-column: 3;
+  grid-column: 2;
   grid-row: 2;
   display: flex;
   flex-direction: column;
@@ -76,13 +70,13 @@
 .description {
   font-size: 1rem;
   line-height: 1.6;
-  color: #4A4A4A;
+  color: #4a4a4a;
   margin: 0;
 }
 
 .articleNumber {
   font-size: 0.875rem;
-  color: #8B8B8B;
+  color: #8b8b8b;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -106,7 +100,7 @@
   font-size: 0.75rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #8B8B8B;
+  color: #8b8b8b;
   margin: 0;
 }
 
@@ -117,7 +111,7 @@
 }
 
 .priceSection {
-  grid-column: 3;
+  grid-column: 2;
   grid-row: 3;
   display: flex;
   flex-direction: column;
@@ -130,7 +124,7 @@
   font-size: 4rem;
   font-weight: 300;
   letter-spacing: -0.02em;
-  color: #C4A57B;
+  color: #c4a57b;
   margin: 0;
 }
 

@@ -1,21 +1,29 @@
-import { useArtworkStore } from "@/stores";
+import { useArtworkStore, useShouldShowUI } from "@/stores";
 import { Cormorant_Garamond } from "next/font/google";
-import styles from "./CollectionSection.module.css";
-import { useGeneratedStory } from "@/hooks";
+import styles from "./ActiveArtworkOverlay.module.css";
+import { useSpring } from "framer-motion";
+import { useEffect } from "react";
+import { MotionDiv } from "../MotionElements";
 
 const cormorantGaramond = Cormorant_Garamond({
   subsets: ["latin"],
   weight: ["300", "400", "600"],
 });
 
-export const CollectionSection = () => {
+export const ActiveArtworkOverlay = () => {
   const activeArtwork = useArtworkStore((state) => state.activeArtwork);
   const clearActiveArtwork = useArtworkStore(
     (state) => state.clearActiveArtwork
   );
-  const { generatedStory } = useGeneratedStory(activeArtwork);
+  const shouldShowUI = useShouldShowUI();
 
-  if (!activeArtwork) return null;
+  const opacity = useSpring(0, { stiffness: 50, damping: 25 });
+
+  useEffect(() => {
+    opacity.set(shouldShowUI ? 1 : 0);
+  }, [shouldShowUI, opacity]);
+
+  if (!shouldShowUI || !activeArtwork) return null;
 
   // Extract metadata
   const creator =
@@ -36,14 +44,14 @@ export const CollectionSection = () => {
   const articleNumber = activeArtwork.id.slice(0, 6).toUpperCase();
 
   return (
-    <section
+    <MotionDiv
       className={`${styles.container} ${cormorantGaramond.className}`}
-      style={{ fontFamily: cormorantGaramond.style.fontFamily }}
+      style={{ fontFamily: cormorantGaramond.style.fontFamily, opacity }}
     >
       {/* Back Button */}
       <button className={styles.backButton} onClick={clearActiveArtwork}>
         <span>←</span>
-        <span>BACK TO ALL</span>
+        <span>BACK</span>
       </button>
 
       {/* Title Section */}
@@ -51,23 +59,8 @@ export const CollectionSection = () => {
         <h1 className={styles.title}>{activeArtwork.title}</h1>
       </div>
 
-      {/* Main Image */}
-      <div className={styles.imageSection}>
-        <img
-          src={activeArtwork.asset[0]?.thumb?.large}
-          alt={activeArtwork.title}
-          className={styles.artworkImage}
-        />
-      </div>
-
       {/* Description Section */}
       <div className={styles.descriptionSection}>
-        <p className={styles.description}>
-          {generatedStory ||
-            activeArtwork.description ||
-            "Exploring Amsterdam's rich history through carefully curated archival materials. Each piece tells a unique story of the city's cultural heritage."}
-        </p>
-
         <div className={styles.articleNumber}>
           <span>Article:</span>
           <strong>{articleNumber}</strong>
@@ -111,6 +104,6 @@ export const CollectionSection = () => {
           {typeof year === "string" ? year : String(year)}
         </p>
       </div>
-    </section>
+    </MotionDiv>
   );
 };

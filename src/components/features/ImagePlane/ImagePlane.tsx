@@ -2,7 +2,7 @@ import { useTexture } from "@react-three/drei";
 import { useArtworkInteractions, useScale, useMouseHover } from "@/hooks";
 import { ArchiveItem } from "@/types/data-types";
 import { useArtworkStore } from "@/stores";
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useEffect } from "react";
 import * as THREE from "three";
 import { normalizeImageDimensions } from "@/utils/normalizeImageDimonsions";
 import { useFrame } from "@react-three/fiber";
@@ -37,9 +37,21 @@ export const ImagePlane = ({
 
   const texture = useTexture(textureUrl || "");
   const meshRef = useRef<THREE.Mesh>(null!);
+  const setTextureLoaded = useArtworkStore((state) => state.setTextureLoaded);
+  const hasReportedLoad = useRef(false);
 
   const { width: normalizedWidth, height: normalizedHeight } =
     normalizeImageDimensions(width, height);
+
+  // Track when texture is loaded and ready
+  useEffect(() => {
+    if (hasReportedLoad.current) return;
+
+    if (texture?.image?.complete && texture.image.width > 0) {
+      hasReportedLoad.current = true;
+      setTextureLoaded();
+    }
+  }, [texture, setTextureLoaded]);
 
   const { handlePointerEnter, handlePointerLeave } = useMouseHover(
     meshRef,

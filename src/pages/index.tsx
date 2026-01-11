@@ -74,15 +74,19 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
   );
   const archiveData = useArtworkStore((state) => state.archiveData);
   const setArchiveData = useArtworkStore((state) => state.setArchiveData);
+  const setTotalTexturesToLoad = useArtworkStore(
+    (state) => state.setTotalTexturesToLoad
+  );
 
   // Initialize store with initial data on mount (only once)
   const hasInitialized = useRef(false);
   useEffect(() => {
     if (!hasInitialized.current && initialArchiveData.length > 0) {
       setArchiveData(initialArchiveData);
+      setTotalTexturesToLoad(initialArchiveData.length);
       hasInitialized.current = true;
     }
-  }, [initialArchiveData, setArchiveData]);
+  }, [initialArchiveData, setArchiveData, setTotalTexturesToLoad]);
 
   // Track scroll progress from AmsterdamHistorySection
   const historySectionRef = useRef<HTMLDivElement>(null);

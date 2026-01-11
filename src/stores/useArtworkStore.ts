@@ -26,9 +26,15 @@ interface ArtworkState {
   // State to keep track of the current collection
   currentCollection: string | null;
   pendingCollectionForSphereTransition: string | null; // Collection waiting for layout transition to complete
+  // Texture loading tracking
+  loadedTexturesCount: number;
+  totalTexturesToLoad: number;
   setCurrentCollection: (collection: string | null) => void;
   clearCurrentCollection: () => void;
   setPendingCollectionForSphereTransition: (collection: string | null) => void;
+  setTextureLoaded: () => void;
+  setTotalTexturesToLoad: (total: number) => void;
+  resetTextureLoading: () => void;
 
   startLayoutTransition: (target: LayoutId) => void;
   setLayoutTransitionProgress: (progress: number) => void;
@@ -67,10 +73,23 @@ export const useArtworkStore = create<ArtworkState>((set) => ({
   archiveData: [],
   currentCollection: null,
   pendingCollectionForSphereTransition: null,
+  loadedTexturesCount: 0,
+  totalTexturesToLoad: 0,
   setCurrentCollection: (collection) => set({ currentCollection: collection }),
   clearCurrentCollection: () => set({ currentCollection: null }),
   setPendingCollectionForSphereTransition: (collection) =>
     set({ pendingCollectionForSphereTransition: collection }),
+  setTextureLoaded: () =>
+    set((state) => ({
+      loadedTexturesCount: Math.min(
+        state.loadedTexturesCount + 1,
+        state.totalTexturesToLoad
+      ),
+    })),
+  setTotalTexturesToLoad: (total) =>
+    set({ totalTexturesToLoad: total, loadedTexturesCount: 0 }),
+  resetTextureLoading: () =>
+    set({ loadedTexturesCount: 0, totalTexturesToLoad: 0 }),
   layoutId: "grid-10",
   layoutTargetId: null,
   isLayoutTransitioning: false,
@@ -134,5 +153,13 @@ export const useShouldShowUI = () => {
     (state) =>
       state.activeArtwork !== null &&
       state.hasCompletedCameraTransitionToArtwork
+  );
+};
+
+export const useAreTexturesReady = () => {
+  return useArtworkStore(
+    (state) =>
+      state.totalTexturesToLoad > 0 &&
+      state.loadedTexturesCount >= state.totalTexturesToLoad
   );
 };

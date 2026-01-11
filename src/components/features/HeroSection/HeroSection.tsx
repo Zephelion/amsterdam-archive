@@ -1,5 +1,6 @@
 import { MotionButton, MotionDiv } from "../MotionElements";
 import { useArtworkStore } from "@/stores";
+import { useAreTexturesReady } from "@/stores";
 import { Cormorant_Garamond } from "next/font/google";
 import { HERO_CONTENT } from "@/constants/heroContent";
 import styles from "./HeroSection.module.css";
@@ -12,6 +13,7 @@ const cormorantGaramond = Cormorant_Garamond({
 export const HeroSection = () => {
   const hasStarted = useArtworkStore((state) => state.hasStarted);
   const setHasStarted = useArtworkStore((state) => state.setHasStarted);
+  const areTexturesReady = useAreTexturesReady();
 
   const handleStart = () => {
     setHasStarted(true);
@@ -96,19 +98,37 @@ export const HeroSection = () => {
         {HERO_CONTENT.titleLine2}
       </p>
 
-      {/* Button */}
-      <MotionButton
-        className={`${styles.startButton} ${cormorantGaramond.className}`}
-        style={{
-          pointerEvents: "auto",
-        }}
-        animate={{ opacity: hasStarted ? 0 : 1 }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
-        onClick={handleStart}
-        whileTap={{ scale: 0.95 }}
-      >
-        <span className={styles.buttonText}>{HERO_CONTENT.buttonText}</span>
-      </MotionButton>
+      {/* Loading indicator or Button */}
+      {!areTexturesReady ? (
+        <MotionDiv
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          style={{
+            fontFamily: cormorantGaramond.style.fontFamily,
+            fontSize: "0.875rem",
+            fontWeight: "400",
+            letterSpacing: "0.1em",
+            color: "#8B8B8B",
+            marginTop: "1rem",
+          }}
+        >
+          Loading archive...
+        </MotionDiv>
+      ) : (
+        <MotionButton
+          className={`${styles.startButton} ${cormorantGaramond.className}`}
+          style={{
+            pointerEvents: "auto",
+          }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: hasStarted ? 0 : 1, y: hasStarted ? 10 : 0 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+          onClick={handleStart}
+          whileTap={{ scale: 0.95 }}
+        >
+          <span className={styles.buttonText}>{HERO_CONTENT.buttonText}</span>
+        </MotionButton>
+      )}
     </MotionDiv>
   );
 };

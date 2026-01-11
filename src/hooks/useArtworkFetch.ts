@@ -9,6 +9,9 @@ export const useArtworkFetch = () => {
   const timelineYear = useArtworkStore((state) => state.timelineYear);
   const currentCollection = useArtworkStore((state) => state.currentCollection);
   const setArchiveData = useArtworkStore((state) => state.setArchiveData);
+  const setTotalTexturesToLoad = useArtworkStore(
+    (state) => state.setTotalTexturesToLoad
+  );
 
   // Ref to track if we've already fetched for the current transition
   const hasFetchedForTransition = useRef(false);
@@ -55,6 +58,7 @@ export const useArtworkFetch = () => {
           // Replace artworks when fetched (update Zustand store)
           setTimeout(() => {
             setArchiveData(filteredData);
+            setTotalTexturesToLoad(filteredData.length);
           }, 2000);
         } catch (error) {
           console.error("Error fetching artworks:", error);
@@ -68,5 +72,11 @@ export const useArtworkFetch = () => {
     if (!isSphereTransitioning) {
       hasFetchedForTransition.current = false;
     }
-  }, [isSphereTransitioning, timelineYear, setArchiveData, currentCollection]);
+  }, [
+    isSphereTransitioning,
+    timelineYear,
+    setArchiveData,
+    currentCollection,
+    setTotalTexturesToLoad,
+  ]);
 };

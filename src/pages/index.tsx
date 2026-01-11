@@ -24,6 +24,7 @@ import {
   CanvasScrollController,
   ScrollIndicator,
   EmptyState,
+  Logo,
 } from "@/components/features";
 import { Canvas } from "@react-three/fiber";
 import { getYearFromMetaData } from "@/utils/getYearFromMetaData";
@@ -108,8 +109,6 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
   // Fetch artworks when timeline transition starts
   useArtworkFetch();
 
-  console.log(archiveData);
-
   return (
     <>
       {/* Canvas - fixed when no artwork active, scrollable when artwork is active */}
@@ -133,6 +132,7 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5 }}
               >
+                <Logo />
                 <InteractiveTimeline />
                 <BrowseByCollectionButton />
                 <HoverTooltip />

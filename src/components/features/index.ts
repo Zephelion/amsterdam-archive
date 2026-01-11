@@ -9,6 +9,7 @@ export { StorySection } from "./StorySection";
 export { StoryParagraph } from "./StoryParagraph";
 export { ActiveArtworkOverlay } from "./ActiveArtworkOverlay";
 export { CollectionSection } from "./CollectionSection";
+export { Logo } from "./Logo";
 export { CollectionSectionTitle } from "./CollectionSectionTitle";
 export { HeroSection } from "./HeroSection";
 export { AmsterdamHistorySection } from "./AmsterdamHistorySection";

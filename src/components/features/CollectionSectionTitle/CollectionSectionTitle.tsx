@@ -24,7 +24,7 @@ export const CollectionSectionTitle = ({
           style={{
             fontFamily: cormorantGaramond.style.fontFamily,
             fontSize: "3rem",
-            fontWeight: "600",
+            fontWeight: "100",
             color: "black",
             textAlign: "center",
             top: "2rem",

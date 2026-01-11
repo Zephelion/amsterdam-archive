@@ -56,7 +56,7 @@ export const ActiveArtworkOverlay = () => {
 
       {/* Title Section */}
       <div className={styles.titleSection}>
-        <h1 className={styles.title}>{activeArtwork.title}</h1>
+        <h3 className={styles.title}>{activeArtwork.title}</h3>
       </div>
 
       {/* Description Section */}

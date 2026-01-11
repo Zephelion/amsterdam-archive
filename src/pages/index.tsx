@@ -10,11 +10,12 @@ import {
   ScrollCTA,
   StorySection,
   ActiveArtworkOverlay,
+  CollectionSection,
   HeroSection,
   AmsterdamHistorySection,
   YearDisplay,
   InteractiveTimeline,
-  TimelineTransitionController,
+  SphereTransitionController,
   LayoutTransitionController,
   BlurredOverlay,
   BrowseByCollectionButton,
@@ -103,6 +104,8 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
   // Fetch artworks when timeline transition starts
   useArtworkFetch();
 
+  console.log(archiveData);
+
   return (
     <>
       {/* Canvas - fixed when no artwork active, scrollable when artwork is active */}
@@ -149,7 +152,7 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
             zoomDistance={CAMERA_OPTIONS.zoomDistance}
             offset={CAMERA_OPTIONS.offset}
           />
-          <TimelineTransitionController />
+          <SphereTransitionController />
           <LayoutTransitionController />
           {archiveData.map((item, index) => (
             <ImagePlane
@@ -218,7 +221,10 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
         </>
       )}
       {shouldShowUI && activeArtwork && generatedStory && (
-        <StorySection content={generatedStory} />
+        <>
+          <StorySection content={generatedStory} />
+          <CollectionSection />
+        </>
       )}
     </>
   );

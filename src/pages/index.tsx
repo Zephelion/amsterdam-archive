@@ -21,6 +21,7 @@ import {
   BrowseByCollectionButton,
   YearCounter,
   CollectionSidePanel,
+  CurrentCollectionDisplay,
   SkipHistoryButton,
   CanvasScrollController,
   ScrollIndicator,
@@ -137,6 +138,7 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
                 <InteractiveTimeline />
                 <BrowseByCollectionButton />
                 <YearCounter />
+                <CurrentCollectionDisplay />
                 <HoverTooltip />
               </MotionDiv>
             </>

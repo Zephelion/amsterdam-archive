@@ -1,0 +1,26 @@
+.collectionDisplay {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  color: black;
+  z-index: 1000;
+  pointer-events: none;
+  user-select: none;
+  max-width: 400px;
+  padding: 8px 16px;
+}
+
+.collectionDisplay span {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .collectionDisplay {
+    font-size: 1rem;
+    bottom: 20px;
+    left: 20px;
+    max-width: 250px;
+    padding: 6px 12px;
+  }
+}

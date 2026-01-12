@@ -21,6 +21,7 @@ export { BlurredOverlay } from "./BlurredOverlay";
 export { LayoutTransitionController } from "./LayoutTransitionController";
 export { BrowseByCollectionButton } from "./BrowseByCollectionButton";
 export { CollectionSidePanel } from "./CollectionSidePanel";
+export { CurrentCollectionDisplay } from "./CurrentCollectionDisplay";
 export { SkipHistoryButton } from "./SkipHistoryButton";
 export { CanvasScrollController } from "./CanvasScrollController";
 export { ScrollIndicator } from "./ScrollIndicator";

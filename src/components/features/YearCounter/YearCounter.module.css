@@ -1,0 +1,42 @@
+.yearCounter {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 8rem;
+  font-weight: 100;
+  color: black;
+  z-index: 1001;
+  pointer-events: none;
+  user-select: none;
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.yearCounter.positioned {
+  position: fixed;
+  bottom: 100px;
+  right: 30px;
+  top: auto;
+  left: auto;
+  transform: translate(0, 0);
+  font-size: 2rem;
+  font-weight: 100;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  backdrop-filter: blur(10px);
+}
+
+@media (max-width: 768px) {
+  .yearCounter {
+    font-size: 5rem;
+  }
+
+  .yearCounter.positioned {
+    font-size: 1.5rem;
+    font-weight: 100;
+    bottom: 90px;
+    right: 20px;
+    padding: 6px 12px;
+  }
+}

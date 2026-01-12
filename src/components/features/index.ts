@@ -14,6 +14,7 @@ export { CollectionSectionTitle } from "./CollectionSectionTitle";
 export { HeroSection } from "./HeroSection";
 export { AmsterdamHistorySection } from "./AmsterdamHistorySection";
 export { YearDisplay } from "./YearDisplay";
+export { YearCounter } from "./YearCounter";
 export { InteractiveTimeline } from "./InteractiveTimeline";
 export { SphereTransitionController } from "./SphereTransitionController";
 export { BlurredOverlay } from "./BlurredOverlay";

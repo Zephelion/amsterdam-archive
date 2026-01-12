@@ -19,6 +19,7 @@ import {
   LayoutTransitionController,
   BlurredOverlay,
   BrowseByCollectionButton,
+  YearCounter,
   CollectionSidePanel,
   SkipHistoryButton,
   CanvasScrollController,
@@ -135,6 +136,7 @@ const Page: NextPage<PageProps> = ({ archiveData: initialArchiveData }) => {
                 <Logo />
                 <InteractiveTimeline />
                 <BrowseByCollectionButton />
+                <YearCounter />
                 <HoverTooltip />
               </MotionDiv>
             </>

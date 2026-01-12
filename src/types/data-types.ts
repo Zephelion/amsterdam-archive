@@ -49,7 +49,7 @@ export interface Thumb {
 export interface Metadaum {
   field: string;
   label: string;
-  value: string | Metadaum[] | null;
+  value: string | Metadaum[] | string[] | null;
 }
 
 export interface Links {

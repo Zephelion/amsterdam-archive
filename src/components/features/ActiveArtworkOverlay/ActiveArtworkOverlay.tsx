@@ -26,9 +26,15 @@ export const ActiveArtworkOverlay = () => {
   if (!shouldShowUI || !activeArtwork) return null;
 
   // Extract metadata
+  const creatorValue = activeArtwork.metadata.find(
+    (meta) => meta.field === "sk_vervaardiger"
+  )?.value;
   const creator =
-    activeArtwork.metadata.find((meta) => meta.field === "dc_creator")?.value ||
-    "Unknown";
+    typeof creatorValue === "string"
+      ? creatorValue
+      : Array.isArray(creatorValue) && creatorValue.length > 0
+      ? creatorValue[0]
+      : "Unknown";
   const year =
     activeArtwork.metadata.find((meta) => meta.field === "dc_date")?.value ||
     activeArtwork.year ||
@@ -42,6 +48,8 @@ export const ActiveArtworkOverlay = () => {
 
   // Format article number
   const articleNumber = activeArtwork.id.slice(0, 6).toUpperCase();
+
+  console.log(activeArtwork);
 
   return (
     <MotionDiv

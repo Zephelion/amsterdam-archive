@@ -1,7 +1,7 @@
 import { useArtworkStore } from "@/stores";
 import { useRelatedArtworks } from "@/hooks/useRelatedArtworks";
 import { useScroll, useTransform } from "framer-motion";
-import { useRef, useState, useEffect, useMemo } from "react";
+import { useRef, useMemo } from "react";
 import { Cormorant_Garamond } from "next/font/google";
 import styles from "./CollectionSection.module.css";
 import { ArtworkCard } from "./ArtworkCard";
@@ -18,19 +18,11 @@ const cormorantGaramond = Cormorant_Garamond({
 export const CollectionSection = () => {
   const activeArtwork = useArtworkStore((state) => state.activeArtwork);
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end end"],
   });
-
-  useEffect(() => {
-    const unsubscribe = scrollYProgress.on("change", (progress) => {
-      setScrollProgress(progress);
-    });
-    return () => unsubscribe();
-  }, [scrollYProgress]);
 
   if (!activeArtwork) return null;
 
@@ -52,6 +44,13 @@ export const CollectionSection = () => {
   const subtitle = titleParts.length > 1 ? titleParts[1].trim() : null;
 
   // Calculate scroll-based transformations
+  // Background transition: white to cream
+  const backgroundColor = useTransform(
+    scrollYProgress,
+    [0, 0.2],
+    ["#ffffff", "#f8f6f1"]
+  );
+
   // Hero section: fade out from 0-0.15
   const heroOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 0.15], [1, 0.9]);
@@ -90,11 +89,12 @@ export const CollectionSection = () => {
   const sectionHeight = `${400 + relatedArtworks.length * 50}vh`;
 
   return (
-    <section
+    <MotionDiv
       ref={sectionRef}
       className={`${styles.container} ${cormorantGaramond.className}`}
       style={{
         height: sectionHeight,
+        backgroundColor: backgroundColor,
       }}
     >
       {/* Sticky container for parallax effects */}
@@ -161,6 +161,6 @@ export const CollectionSection = () => {
           </>
         )}
       </div>
-    </section>
+    </MotionDiv>
   );
 };

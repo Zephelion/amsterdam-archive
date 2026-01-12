@@ -1,6 +1,6 @@
 .container {
   position: relative;
-  background: #f8f6f1;
+  /* Background is now controlled by inline style for animation */
 }
 
 .stickyContainer {

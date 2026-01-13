@@ -1,353 +1,565 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Amsterdam Archive - RE:telling of the City of Amsterdam
 
-## Getting Started
+An immersive 3D web experience exploring Amsterdam's historical archives through interactive visualizations, AI-generated narratives, and temporal navigation. This project aims to make historical archives more accessible and engaging for a broader audience by combining modern web technologies with cultural heritage.
 
-First, run the development server:
+![Next.js](https://img.shields.io/badge/Next.js-16.0.7-black)
+![React](https://img.shields.io/badge/React-19.2.0-blue)
+![Three.js](https://img.shields.io/badge/Three.js-via%20React%20Three%20Fiber-orange)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- **Node.js** (v18 or higher)
+- **npm** or **yarn** or **pnpm** or **bun**
+- **OpenAI API Key** (for AI story generation)
+
+### Installation
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/yourusername/amsterdam-archive.git
+   cd amsterdam-archive
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+   # or
+   yarn install
+   # or
+   pnpm install
+   # or
+   bun install
+   ```
+
+3. **Set up environment variables**
+
+   Create a `.env.local` file in the root directory:
+
+   ```bash
+   OPENAI_API_KEY=your_openai_api_key_here
+   ```
+
+4. **Run the development server**
+
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   # or
+   pnpm dev
+   # or
+   bun dev
+   ```
+
+5. **Open your browser**
+
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+### Build for Production
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run build
+npm run start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Linting
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
-
-## Zoom In Effect & Active Artwork System
-
-This application features an interactive 3D gallery where users can click on artwork images to zoom in and view detailed information. The system orchestrates smooth camera transitions, artwork scaling, and UI state management.
-
-### Overview
-
-When a user clicks on an artwork in the 3D scene, the application:
-
-1. Sets the artwork as "active" in the global state
-2. Smoothly transitions the camera to zoom in on the selected artwork
-3. Fades out all other artworks while keeping the active one visible
-4. Displays story content and timeline information once the camera transition completes
-
-### Active Artwork State Management
-
-The active artwork system is managed through a Zustand store (`useArtworkStore`) that tracks:
-
-- **`activeArtwork`**: The currently selected `ArchiveItem` object, or `null` if none is selected
-- **`activeArtworkPosition`**: The 3D position `[x, y, z]` of the active artwork in the scene
-- **`isAnimating`**: Boolean flag indicating if an animation is in progress
-- **`hasCompletedCameraTransitionToArtwork`**: Boolean flag indicating when the camera has finished transitioning to the artwork
-
-**Key Actions:**
-
-- `setActiveArtwork(artwork, position)`: Sets an artwork as active and stores its position
-- `clearActiveArtwork()`: Clears the active artwork and resets related state
-- `setCameraTransitioning(completed)`: Updates the camera transition completion status
-
-### Zoom In Effect - Camera Transition
-
-The zoom effect is implemented through the `CameraController` component and `useCameraTransition` hook.
-
-**How it works:**
-
-1. **Trigger**: When an artwork is clicked, `useArtworkInteractions` calls `setActiveArtwork()` with the artwork data and its 3D position.
-
-2. **Camera Movement**: The `useCameraTransition` hook monitors the `activeArtwork` state and calculates a target camera position:
-
-   ```
-   targetCameraPos = artworkPosition + offset + [0, 0, zoomDistance]
-   ```
-
-   - Default `zoomDistance`: 3.5 units along the Z-axis
-   - Default `offset`: `[0, 0, 0]` (configurable)
-   - Default `lerpSpeed`: 0.02 (controls transition smoothness)
-
-3. **Smooth Interpolation**: Each frame, the camera position is interpolated using `THREE.Vector3.lerp()` toward the target position, creating a smooth zoom-in animation.
-
-4. **Completion Detection**: When the camera is within 0.1 units of the target position, the system marks the transition as complete via `setCameraTransitioning(true)`.
-
-5. **Return to Base**: When `activeArtwork` is cleared (e.g., clicking empty space), the camera smoothly returns to its base position using the same lerp mechanism.
-
-**Configuration:**
-The camera transition can be customized via `CAMERA_OPTIONS` in `pages/index.tsx`:
-
-```typescript
-const CAMERA_OPTIONS = {
-  lerpSpeed: 0.02, // Transition smoothness (0-1)
-  zoomDistance: 3.5, // Distance from artwork in Z-axis
-  offset: [0, 0, 0], // Additional position offset
-};
+```bash
+npm run lint
 ```
 
-### Artwork Scaling & Fade Effect
+## ✨ Features
 
-When an artwork becomes active, all other artworks fade out while the active one remains visible. This is handled by the `useScale` hook applied to each `ImagePlane` component.
+### 🎨 Interactive 3D Gallery
 
-**Scaling Logic:**
+- **3D Image Grid System**
 
-1. **Active Artwork**: Maintains scale of `1.0` (normal size)
-2. **Inactive Artworks**: When any artwork is active, all non-active artworks scale to `0` (invisible)
-3. **Smooth Transition**: Scaling uses `THREE.MathUtils.lerp()` with a `lerpSpeed` of `0.045` for smooth fade in/out
+  - Dynamic grid layouts supporting 10-column and 6-column configurations
+  - Smooth layout transitions between different grid configurations
+  - Real-time position interpolation for fluid artwork movement
+  - Aspect ratio preservation with intelligent image scaling
+  - Support for 200+ archive items with optimized performance
 
-**Configuration:**
-Each `ImagePlane` uses `SCALE_OPTIONS`:
+- **Sphere Visualization**
 
-```typescript
-const SCALE_OPTIONS = {
-  lerpSpeed: 0.045, // Scale transition speed
-  inactiveScale: 0, // Scale for inactive artworks when one is active
-  activeScale: 1.5, // (Currently unused, reserved for future use)
-};
+  - Artworks arranged in a 3D sphere formation
+  - Smooth sphere-to-grid morphing transitions (2-second duration)
+  - Camera choreography synchronized with layout transitions
+  - 2-second pause at sphere formation for visual impact
+
+- **Floating Camera Animation**
+  - Gentle idle camera movement using sine/cosine oscillation
+  - 0.5 units horizontal amplitude, 0.25 units vertical amplitude
+  - Automatic pause when user interacts with artwork
+  - Smooth lerp-based interpolation (0.1 speed)
+
+### 🖼️ Artwork Interaction System
+
+- **Click-to-Zoom Experience**
+
+  - Smooth camera transition to selected artwork (lerp speed: 0.02)
+  - Configurable zoom distance (default: 3.5 units)
+  - Other artworks fade out while maintaining active artwork visibility
+  - Automatic scale transition with 0.045 lerp speed
+
+- **Hover Effects**
+
+  - Interactive hover tooltips showing artwork titles
+  - Scale animations on collection items (1.1x scale on hover)
+  - Visual feedback with smooth transitions
+
+- **Artwork Detail View**
+  - Full artwork metadata display
+  - High-resolution image loading
+  - Related artworks carousel
+  - AI-generated contextual stories
+
+### 📖 AI-Powered Storytelling
+
+- **OpenAI Integration**
+
+  - GPT-4o-mini model for story generation
+  - Context-aware narratives based on artwork metadata
+  - Art historian persona for historically accurate content
+  - Temperature: 0.7 for balanced creativity
+  - Max tokens: 300 (approximately 100 words)
+  - Language-aware generation
+
+- **Smart Caching System**
+
+  - In-memory cache using Map data structure
+  - Prevents duplicate API calls for viewed artworks
+  - Session-persistent cache
+  - Automatic cache invalidation on artwork deselection
+
+- **Scroll-Based Story Reveal**
+  - Stories broken into readable paragraphs (150 characters each)
+  - Paragraph-by-paragraph fade-in animations
+  - Scroll progress tracking with Framer Motion
+  - 400vh scrollable section (4x viewport height)
+  - Smooth opacity transitions (25% fade in/out segments)
+
+### ⏱️ Temporal Navigation
+
+- **Interactive Timeline**
+
+  - Visual timeline spanning historical period (1600s - present)
+  - Mouse-hover year preview with real-time calculation
+  - Click-to-select year functionality
+  - Timeline markers every 9 years
+  - Dynamic bulge effect on hover (25-pixel radius)
+  - Gradient fade on edges for visual polish
+
+- **Animated Year Counter**
+
+  - Dramatic countdown animation (8-second duration)
+  - Bidirectional counting (supports both forward and backward navigation)
+  - easeOutQuart easing function for smooth deceleration
+  - Initial display: Large centered text (8rem font size)
+  - Final position: Bottom-right corner above Browse button
+  - Persistent year indicator showing current time period
+  - Ultra-light font weight (100) for elegant appearance
+
+- **Year-Based Filtering**
+  - Automatic artwork filtering by selected year
+  - Smooth transition to filtered results via sphere animation
+  - Integration with collection display system
+
+### 📚 Collection Management
+
+- **Collection Side Panel**
+
+  - 26 curated Amsterdam archive collections
+  - Slide-in panel from right (28vw width)
+  - Staggered animation for collection items (0.14s delay)
+  - Click-outside-to-close functionality
+  - Backdrop overlay for focus
+
+- **Collection Display**
+
+  - Bottom-left corner collection indicator
+  - Shows current active collection
+  - Clean name extraction (removes item counts)
+  - Fade-in from left animation (0.5s duration)
+  - Semi-transparent background with backdrop blur
+  - Font weight: 500 for balanced readability
+  - Max width: 400px (desktop) / 250px (mobile)
+
+- **Collection Filtering**
+  - Real-time filtering of artworks by collection
+  - Integration with layout transition system
+  - Pending collection state during transitions
+  - Automatic sphere transition when collection selected
+
+### 🎭 Amsterdam History Section
+
+- **Scrollable Historical Narrative**
+
+  - Multi-section storytelling about Amsterdam's history
+  - Scroll-based content reveal with opacity transitions
+  - Synchronized with 3D sphere visualization
+  - Custom Cormorant Garamond typography
+  - Content sections with engaging historical context
+
+- **Year Display**
+
+  - Dynamic year counter during history scroll
+  - Tracks historical progression through scroll position
+  - Synchronized with narrative content
+
+- **Skip History Feature**
+  - Quick-skip button to jump to main gallery
+  - Smooth scroll to end of history section
+  - Automatic state transition to completed status
+
+### 🎬 Advanced Animation System
+
+- **Layout Transitions**
+
+  - Multi-stage layout morphing system
+  - Progress tracking (0 to 1) for interpolation
+  - Support for multiple layout configurations (grid-10, grid-6, sphere)
+  - Smooth position interpolation using easing functions
+  - Synchronized camera and artwork transitions
+
+- **Framer Motion Integration**
+
+  - Declarative animation API
+  - Custom motion components (MotionDiv, MotionButton, MotionSpan)
+  - AnimatePresence for mount/unmount animations
+  - Scroll-linked animations using useScroll and useTransform
+  - Staggered children animations
+
+- **Three.js Animations**
+  - useFrame hook for 60fps animations
+  - Vector3 lerp for smooth position transitions
+  - RequestAnimationFrame for counter animations
+  - Custom easing functions (easeOutQuart)
+
+### 🎯 User Experience Enhancements
+
+- **Responsive Design**
+
+  - Mobile-optimized layouts and font sizes
+  - Breakpoint at 768px for mobile/desktop
+  - Touch-friendly interface elements
+  - Adaptive grid configurations
+
+- **Loading States**
+
+  - Texture loading progress tracking
+  - Total textures counter (200+ items)
+  - Loaded textures counter with reactive updates
+  - Empty state component for no results
+
+- **Visual Feedback**
+
+  - Hover tooltips with artwork titles
+  - Mix-blend-mode for contrast on any background
+  - Button hover effects with color transitions
+  - Scale transformations on interactive elements
+
+- **Smooth Scrolling**
+  - Lenis smooth scroll library integration
+  - Natural scroll behavior
+  - Enhanced scroll performance
+  - Disabled during 3D interactions
+
+### 🏛️ Hero & Branding
+
+- **Animated Hero Section**
+
+  - Eye-catching entry experience
+  - Custom typography with Cormorant Garamond
+  - "Start Exploring" call-to-action
+  - Fade-in animations on mount
+
+- **Logo Component**
+
+  - Persistent branding element
+  - Fixed positioning in top-left corner
+  - Subtle design for non-intrusive presence
+
+- **Scroll Indicators**
+  - Visual cues for scrollable content
+  - Animated scroll-down indicators
+  - Context-aware visibility
+
+### 🗄️ State Management
+
+- **Zustand Store Architecture**
+
+  - Centralized state management
+  - Type-safe actions and selectors
+  - Minimal boilerplate
+  - React hooks integration
+
+- **State Categories**
+  - Artwork interaction state (active, position, animation)
+  - Layout system state (layoutId, transitions, progress)
+  - Sphere transition state (progress, year selection)
+  - Collection state (current, pending)
+  - Texture loading state (counts, ready status)
+  - Navigation state (history completion, start status)
+
+### 🎨 Data Integration
+
+- **Stadsarchief Amsterdam API**
+
+  - Server-side data fetching (SSR)
+  - 200 items per page
+  - Metadata extraction and processing
+  - Year extraction from metadata fields
+  - Asset validation and filtering
+
+- **Data Processing**
+  - Year parsing with regex (1600-2029 range)
+  - Metadata value extraction (recursive)
+  - Image dimension normalization
+  - Grid position calculations
+
+### 🧩 Advanced Utilities
+
+- **Position Calculation**
+
+  - `getGridPosition`: 10-column and 6-column grid layouts
+  - `getSpherePosition`: 3D sphere arrangement with seeded randomization
+  - `getInterpolatedPosition`: Smooth transitions between layouts
+  - `getGrid10To6WrappedPosition`: Wrapped grid transformations
+
+- **Year & Timeline**
+
+  - `calculateYearFromMousePosition`: Mouse-to-year mapping
+  - `getCurrentYear`: Dynamic current year
+  - `getYearFromMetaData`: Regex-based year extraction
+
+- **Content Processing**
+
+  - `breakContentIntoParagraphs`: Smart paragraph segmentation
+  - `extractMetadataValues`: Recursive metadata extraction
+  - `normalizeImageDimensions`: Aspect ratio preservation
+
+- **Animation Helpers**
+  - `clamp`: Value clamping utility
+  - `getBarTransform`: Timeline bar bulge calculations
+
+## 🛠️ Technology Stack
+
+### Core Framework
+
+- **Next.js 16.0.7** - React framework with SSR
+- **React 19.2.0** - UI library
+- **TypeScript 5** - Type-safe development
+
+### 3D & Animation
+
+- **@react-three/fiber 9.4.0** - React renderer for Three.js
+- **@react-three/drei 10.7.6** - Three.js helpers
+- **Three.js** - 3D graphics library
+- **Framer Motion 12.23.24** - Animation library
+- **react-spring 10.0.3** - Spring physics animations
+
+### State & Data
+
+- **Zustand 5.0.8** - State management
+- **OpenAI 6.8.1** - AI story generation
+
+### UI & Styling
+
+- **Next.js Font** - Google Fonts integration (Cormorant Garamond)
+- **CSS Modules** - Scoped component styling
+- **Lenis 1.3.11** - Smooth scroll library
+
+### Development Tools
+
+- **ESLint** - Code linting
+- **eslint-config-next** - Next.js specific rules
+
+## 📁 Project Structure
+
+```
+amsterdam-archive/
+├── src/
+│   ├── components/
+│   │   └── features/          # Feature components
+│   │       ├── ActiveArtworkOverlay/
+│   │       ├── AmsterdamHistorySection/
+│   │       ├── BrowseByCollectionButton/
+│   │       ├── CameraController/
+│   │       ├── CanvasScrollController/
+│   │       ├── CollectionSection/
+│   │       ├── CollectionSidePanel/
+│   │       ├── CurrentCollectionDisplay/
+│   │       ├── FloatingCamera/
+│   │       ├── HeroSection/
+│   │       ├── HoverTooltip/
+│   │       ├── ImagePlane/
+│   │       ├── InteractiveTimeline/
+│   │       ├── LayoutTransitionController/
+│   │       ├── Logo/
+│   │       ├── MotionElements/
+│   │       ├── ScrollIndicator/
+│   │       ├── SphereTransitionController/
+│   │       ├── StorySection/
+│   │       ├── YearCounter/
+│   │       └── YearDisplay/
+│   ├── constants/             # Configuration constants
+│   │   ├── amsterdamHistoryContent.ts
+│   │   ├── camera.ts
+│   │   ├── collections.ts
+│   │   └── heroContent.ts
+│   ├── hooks/                 # Custom React hooks
+│   │   ├── useArtworkFetch.ts
+│   │   ├── useArtworkInteractions.ts
+│   │   ├── useCameraTransition.ts
+│   │   ├── useCanvasScroll.ts
+│   │   ├── useGeneratedStory.ts
+│   │   ├── useLayoutTransition.ts
+│   │   ├── useSphereTransition.ts
+│   │   └── ...
+│   ├── lib/                   # External API integrations
+│   │   └── stadsarchief.ts
+│   ├── pages/                 # Next.js pages
+│   │   ├── api/              # API routes
+│   │   │   ├── fetch-artworks.ts
+│   │   │   └── generate-story.ts
+│   │   ├── _app.tsx
+│   │   ├── _document.tsx
+│   │   └── index.tsx
+│   ├── stores/                # Zustand state stores
+│   │   └── useArtworkStore.ts
+│   ├── styles/                # Global styles
+│   │   ├── globals.css
+│   │   └── Home.module.css
+│   ├── types/                 # TypeScript type definitions
+│   │   └── data-types.ts
+│   └── utils/                 # Utility functions
+│       ├── breakContentIntoParagraphs.ts
+│       ├── calculateYearFromMousePosition.ts
+│       ├── clamp.ts
+│       ├── extractMetadataValues.ts
+│       ├── getGridPosition.ts
+│       ├── getInterpolatedPosition.ts
+│       ├── getSpherePosition.ts
+│       ├── getYearFromMetaData.ts
+│       ├── layouts.ts
+│       └── normalizeImageDimensions.ts
+├── public/                    # Static assets
+├── .env.local                 # Environment variables (create this)
+├── package.json
+├── tsconfig.json
+├── next.config.ts
+└── README.md
 ```
 
-### Interaction Flow
+## 🔑 Environment Variables
 
-The complete interaction flow from click to UI display:
+Create a `.env.local` file in the root directory:
 
-1. **User clicks artwork** → `ImagePlane` onClick handler fires
-2. **`useArtworkInteractions`** → Calls `setActiveArtwork(artwork, position)`
-3. **State updates** → `activeArtwork` and `activeArtworkPosition` are set, `isAnimating` becomes `true`
-4. **Camera starts transitioning** → `CameraController` detects active artwork and begins lerping camera position
-5. **Other artworks fade out** → `useScale` hook scales inactive artworks to 0
-6. **Camera reaches target** → Distance < 0.1 units triggers `setCameraTransitioning(true)`
-7. **UI becomes visible** → `useShouldShowUI()` hook returns `true` when both `activeArtwork` exists and camera transition is complete
-8. **Story content displays** → `StorySection` and `TimelineSection` components render
+```env
+# Required
+OPENAI_API_KEY=your_openai_api_key_here
 
-### Floating Camera Behavior
+# Optional (if using custom API endpoints)
+# NEXT_PUBLIC_API_BASE_URL=http://localhost:3000
+```
 
-When no artwork is active, the `FloatingCamera` component creates a subtle floating animation effect:
+## 🚢 Deployment
 
-- The camera gently oscillates using sine/cosine waves
-- Float amplitude: 0.5 units horizontally, 0.25 units vertically
-- Animation speed: 0.3-0.4 radians per second
-- Uses lerp interpolation (0.1 speed) for smooth movement
+### Deploy on Vercel (Recommended)
 
-This floating effect pauses automatically when an artwork becomes active (checked via `if (activeArtwork) return;`).
+1. Push your code to GitHub
+2. Import your repository on [Vercel](https://vercel.com)
+3. Add your environment variables in project settings
+4. Deploy!
 
-### Clearing Active Artwork
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/amsterdam-archive)
 
-Users can clear the active artwork by:
+### Other Platforms
 
-- Clicking on empty space in the 3D scene (handled by `onPointerMissed` on the Canvas)
-- The `clearActiveArtwork()` function resets all state and triggers camera return animation
+The application can be deployed on any platform that supports Next.js:
 
-### Related Components & Hooks
+- Netlify
+- AWS Amplify
+- Digital Ocean App Platform
+- Railway
+- Render
 
-- **`FloatingCamera`**: Handles idle camera floating animation
-- **`CameraController`**: Manages camera transitions to/from artworks
-- **`ImagePlane`**: Individual artwork mesh with click handlers
-- **`useArtworkInteractions`**: Handles click events and state updates
-- **`useCameraTransition`**: Core camera animation logic
-- **`useScale`**: Artwork scaling/fade animation
-- **`useArtworkStore`**: Global state management for artwork interactions
+## 🎯 Key Technical Decisions
 
-## Generated Story Feature
+### Why Next.js?
 
-The application automatically generates contextual stories for each artwork using OpenAI's GPT-4o-mini model. Stories are generated on-demand when an artwork becomes active, cached for performance, and displayed with smooth scroll-based animations.
+- Server-side rendering for better SEO and initial load performance
+- API routes for backend functionality (OpenAI integration)
+- Optimized image handling
+- Built-in TypeScript support
 
-### Overview
+### Why React Three Fiber?
 
-When a user clicks on an artwork and the camera transition completes, the system:
+- Declarative 3D scene management
+- React ecosystem integration
+- Performance optimization out of the box
+- Easy state synchronization between 3D and 2D
 
-1. Checks if a story already exists in cache for that artwork
-2. If not cached, generates a new story via API call to OpenAI
-3. Stores the generated story in both the global state and an in-memory cache
-4. Displays the story in a scrollable section with paragraph-by-paragraph fade animations
+### Why Zustand?
 
-### Story Generation Flow
+- Minimal boilerplate compared to Redux
+- TypeScript-first design
+- No provider hell
+- Great performance with selective subscriptions
 
-**Trigger:**
+### Why Framer Motion?
 
-- The `useGeneratedStory` hook monitors the `activeArtwork` state
-- When an artwork becomes active, it automatically triggers story generation
-- The hook is called in `pages/index.tsx` with the active artwork as a parameter
+- Declarative animation API
+- Scroll-linked animations
+- Layout animations
+- Great TypeScript support
 
-**Generation Process:**
+## 📝 Development Notes
 
-1. **Cache Check**: First checks an in-memory `Map` cache using the artwork's `id` as the key
+### Performance Considerations
 
-   - If cached story exists → immediately sets it in state and returns
-   - If not cached → proceeds to generate new story
+- **Texture Loading**: All 200+ images are loaded progressively
+- **Lerp Animations**: Smooth 60fps animations using requestAnimationFrame
+- **Selective Rendering**: Components only re-render when necessary
+- **Memoization**: Strategic use of useMemo and useCallback
 
-2. **API Request**: Makes a POST request to `/api/generate-story` with the artwork data:
+### Browser Compatibility
 
-   {
-   artwork: ArchiveItem // Contains title, description, year, metadata, etc.
-   } 3. **Story Storage**: Once generated, the story is:
+- Modern browsers (Chrome, Firefox, Safari, Edge)
+- WebGL support required
+- Recommended: Hardware acceleration enabled
 
-   - Stored in the cache (`storyCache.set(artwork.id, story)`)
-   - Set in the global Zustand store via `setGeneratedStory(story)`
+### Known Limitations
 
-3. **Prevention of Duplicate Requests**: Uses a `useRef` flag (`isGenerating`) to prevent multiple simultaneous API calls for the same artwork
+- OpenAI API key required for story generation
+- Mobile experience optimized but desktop recommended
+- WebGL performance varies by device
 
-### API Endpoint: `/api/generate-story`
+## 🤝 Contributing
 
-The API endpoint (`src/pages/api/generate-story.ts`) handles story generation using OpenAI:
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-**Input:**
+## 📄 License
 
-- `artwork`: Complete `ArchiveItem` object containing:
-  - `title`: Artwork title
-  - `description`: Artwork description (optional)
-  - `year`: Year the artwork was created
-  - `metadata`: Array of metadata objects with labels and values
+This project is part of a graduation thesis (Afstuderen 2025-2026).
 
-**Processing:**
+## 🙏 Acknowledgments
 
-1. **Metadata Extraction**: Uses `extractMetadataValues()` utility to:
+- **Stadsarchief Amsterdam** for providing the archive API
+- **OpenAI** for GPT-4o-mini model
+- **Three.js community** for excellent 3D libraries
+- **Next.js team** for the amazing framework
 
-   - Extract all metadata values from nested structures
-   - Format them as readable strings with labels
-   - Handle both string and array metadata values recursively
+## 📧 Contact
 
-2. **Prompt Construction**: Builds a detailed prompt including:
+For questions or feedback, please open an issue on GitHub.
 
-   - Artwork title
-   - Description (if available)
-   - Year (if available)
-   - Extracted metadata context
-   - Instructions for story style and length (100 words)
+---
 
-3. **OpenAI API Call**:
-
-   - Model: `gpt-4o-mini`
-   - System role: "Knowledgeable art historian and archivist specializing in Amsterdam's cultural heritage"
-   - Max tokens: 300
-   - Temperature: 0.7 (balanced creativity/consistency)
-   - Language: Matches the artwork's language
-
-4. **Response**: Returns the generated story text as JSON:
-   {
-   "story": "Generated story text..."
-   }
-   **Error Handling:**
-
-- Returns 400 if artwork is missing
-- Returns 500 if OpenAI API call fails
-- Errors are logged to console for debugging
-
-### Story Display
-
-The generated story is displayed in the `StorySection` component, which only renders when:
-
-- `shouldShowUI` is `true` (camera transition completed)
-- `activeArtwork` exists
-- `generatedStory` is available
-
-**Component Structure:**
-
-1. **StorySection** (`src/components/features/StorySection/StorySection.tsx`):
-
-   - Creates a scrollable section with height of `400vh` (4x viewport height)
-   - Uses Cormorant Garamond font for elegant typography
-   - Tracks scroll progress using Framer Motion's `useScroll` hook
-   - Passes scroll progress to `StoryParagraph` component
-
-2. **StoryParagraph** (`src/components/features/StoryParagraph/StoryParagraph.tsx`):
-   - Breaks the story text into paragraphs using `breakContentIntoParagraphs()` utility
-   - Default paragraph length: 150 characters
-   - Creates scroll-based fade animations for each paragraph
-
-**Paragraph Breaking Logic:**
-
-The `breakContentIntoParagraphs()` utility (`src/utils/breakContentIntoParagraphs.ts`):
-
-- Splits content by newlines first
-- For lines exceeding `maxLength` (default 150 chars):
-  - Splits by words to fit within length limit
-- For shorter lines:
-  - Combines multiple lines into paragraphs up to `maxLength`
-- Preserves natural paragraph breaks while ensuring readability
-
-**Scroll-Based Animation:**
-
-Each paragraph fades in and out based on scroll position:
-
-1. **Segment Calculation**: Each paragraph occupies an equal segment of the total scroll progress
-
-   - Segment start: `index / totalParagraphs`
-   - Segment end: `(index + 1) / totalParagraphs`
-
-2. **Fade Transitions**:
-
-   - **Fade In**: First 25% of segment (configurable via `fadeTransitionPercentage`)
-   - **Fully Visible**: Middle 50% of segment
-   - **Fade Out**: Last 25% of segment
-   - Last paragraph extends fade-out slightly to handle scroll beyond 1.0
-
-3. **Opacity Calculation**: Uses Framer Motion's `useTransform` to map scroll progress to opacity:
-   opacity = useTransform(scrollYProgress, (progress) => {
-   // Calculates opacity based on progress within segment
-   }) 4. **Visual Styling**:
-   - Font size: `2rem`
-   - Line height: `1.6`
-   - Max width: `600px`
-   - Centered text alignment
-   - Absolute positioning for overlay effect
-
-### Caching Strategy
-
-**In-Memory Cache:**
-
-- Uses a `Map<string, string>` to store stories by artwork ID
-- Cache persists for the duration of the session
-- Prevents redundant API calls when users revisit the same artwork
-- Cache is cleared when the page is refreshed
-
-**State Management:**
-
-- Story is stored in Zustand store (`useArtworkStore`)
-- Cleared when `clearActiveArtwork()` is called
-- Allows components to reactively update when story changes
-
-### Integration with Active Artwork System
-
-The story feature is tightly integrated with the active artwork system:
-
-1. **Trigger**: Story generation starts automatically when `activeArtwork` changes
-2. **Display Condition**: Story only displays after camera transition completes (`hasCompletedCameraTransitionToArtwork`)
-3. **Cleanup**: Story is cleared when artwork is deselected via `clearActiveArtwork()`
-
-**Conditional Rendering:**
-{shouldShowUI && activeArtwork && generatedStory && (
-<>
-<StorySection content={generatedStory} />
-<TimelineSection />
-</>
-)}### Environment Variables
-
-The API endpoint requires an OpenAI API key:
-
-OPENAI_API_KEY=your_openai_api_key_hereThis should be set in your `.env.local` file for local development or in your deployment environment variables.
-
-### Related Components & Utilities
-
-- **`useGeneratedStory`**: Hook that manages story generation and caching
-- **`StorySection`**: Container component for story display
-- **`StoryParagraph`**: Component that handles paragraph rendering and scroll animations
-- **`breakContentIntoParagraphs`**: Utility for splitting story text into readable paragraphs
-- **`extractMetadataValues`**: Utility for extracting and formatting artwork metadata
-- **`/api/generate-story`**: Next.js API route for OpenAI integration
+Built with ❤️ for Amsterdam's Cultural Heritage

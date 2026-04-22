@@ -4,7 +4,7 @@ import { BaseLayout } from "@/layouts/BaseLayout";
 import ReactLenis from "lenis/react";
 import { generateDefaultSeo } from "next-seo/pages";
 import Head from "next/head";
-import { ScrollController } from "@/components/features";
+import { ScrollController, DesktopOnlyOverlay } from "@/components/features";
 
 export default function App({ Component: Page, pageProps }: AppProps) {
   return (
@@ -16,6 +16,7 @@ export default function App({ Component: Page, pageProps }: AppProps) {
           <Page {...pageProps} />
         </BaseLayout>
       </ReactLenis>
+      <DesktopOnlyOverlay />
     </>
   );
 }

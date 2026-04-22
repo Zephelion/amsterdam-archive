@@ -26,3 +26,4 @@ export { SkipHistoryButton } from "./SkipHistoryButton";
 export { CanvasScrollController } from "./CanvasScrollController";
 export { ScrollIndicator } from "./ScrollIndicator";
 export { EmptyState } from "./EmptyState";
+export { DesktopOnlyOverlay } from "./DesktopOnlyOverlay";
